@@ -1,0 +1,13 @@
+name: MobWars
+description: The minigame plugin where your mobs fight other mobs!
+version: 1.0
+author: NathanApes
+
+main: nathan.apes.mw.main.MobWars
+
+commands: 
+  
+  defaultcmd: 
+    description: Just a default.
+    usage: /defaultcmd
+    
