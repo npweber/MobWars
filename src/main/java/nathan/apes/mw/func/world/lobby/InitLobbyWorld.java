@@ -7,13 +7,11 @@ import nathan.apes.mw.func.world.CheckWorld;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class InitLobby {
+public class InitLobbyWorld {
     
-    public World lobbyw;
+    public static World lobbyw;
     
-    public InitLobby(){}
-    
-    public void lobbyinit(){
+    public InitLobbyWorld(){
         
         JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
         
@@ -25,8 +23,6 @@ public class InitLobby {
             wc = wc.type(WorldType.FLAT);
             wc = wc.generatorSettings("2;0;1;");
             
-            
-            
             World w = wc.createWorld();
             
             mainclass.getLogger().info("Generated lobby world...");
@@ -37,7 +33,10 @@ public class InitLobby {
             
         }
         
-        mainclass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainclass);
+        lobbyw = Bukkit.getWorld("mw_Lobby");
+        //Change to config value later...
+        
+        mainclass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainclass);        
         
     }
 

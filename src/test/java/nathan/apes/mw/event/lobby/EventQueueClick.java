@@ -17,6 +17,8 @@ public class EventQueueClick implements Listener{
         
         Player clker = pie.getPlayer();
         
+        clker.sendMessage("Test.");
+        
         if(clker.getWorld().equals(InitLobbyWorld.lobbyw)){
         
             if(pie.getAction().equals(Action.LEFT_CLICK_AIR)){

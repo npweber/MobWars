@@ -48,6 +48,8 @@ public class PlayerQueue {
             
         }
         
+        /*
+        
         if(playerpair.size() == 2){
             
             Player p1 = playerpair.get(0);
@@ -62,7 +64,8 @@ public class PlayerQueue {
             
         }
         
-        
+        */
+           
     }
     
 }

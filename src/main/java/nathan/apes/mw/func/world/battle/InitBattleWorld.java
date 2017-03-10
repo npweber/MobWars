@@ -7,13 +7,11 @@ import nathan.apes.mw.main.MobWars;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class InitBattle {
+public class InitBattleWorld {
     
-    public World battlew;
+    public static World battlew;
     
-    public InitBattle(){}
-    
-    public void initBattleWorld(){
+    public InitBattleWorld(){
         
         JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
         
@@ -34,7 +32,10 @@ public class InitBattle {
             
         }
         
-        mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);
+        battlew = Bukkit.getWorld("mw_BattleWorld");
+        //Change to config later...
+        
+        mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);        
         
     }
     
