@@ -1,8 +1,8 @@
 package nathan.apes.mw.func.world.lobby;
 
 import nathan.apes.mw.main.MobWars;
+import nathan.apes.mw.world.CheckWorld;
 import nathan.apes.mw.event.lobby.*;
-import nathan.apes.mw.func.world.CheckWorld;
 
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;

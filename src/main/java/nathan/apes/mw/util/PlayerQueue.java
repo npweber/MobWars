@@ -18,7 +18,7 @@ public class PlayerQueue {
     
     public ArrayList<Battle> currbattles = new ArrayList<Battle>();
     
-    public int battleind = -1;
+    private int battleind = -1;
     
     public PlayerQueue(){
         

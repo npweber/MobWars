@@ -1,4 +1,4 @@
-package nathan.apes.mw.func.world;
+package nathan.apes.mw.world;
 
 import java.util.*;
 

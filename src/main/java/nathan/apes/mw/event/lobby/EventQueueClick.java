@@ -17,11 +17,13 @@ public class EventQueueClick implements Listener{
         
         Player clker = pie.getPlayer();
         
+        ItemStack iteml = new ItemStack(Material.NETHER_STAR);
+        
         if(clker.getWorld().equals(InitLobbyWorld.lobbyw)){
         
             if(pie.getAction().equals(Action.LEFT_CLICK_AIR)){
                 
-                if(pie.getItem().equals(new ItemStack(Material.NETHER_STAR))){
+                if(pie.getItem().equals(iteml)){
                 
                     for(int i = 0; i < PlayerQueue.players.size(); i++){
                 
@@ -41,7 +43,8 @@ public class EventQueueClick implements Listener{
                 
                     }
                     
-                }   
+                }
+
             
             }
         
