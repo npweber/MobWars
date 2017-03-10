@@ -1,5 +1,6 @@
 package nathan.apes.mw.main;
 
+import nathan.apes.mw.event.lobby.*;
 import nathan.apes.mw.func.world.lobby.InitLobbyWorld;
 import nathan.apes.mw.func.world.battle.InitBattleWorld;
 import nathan.apes.mw.util.*;
