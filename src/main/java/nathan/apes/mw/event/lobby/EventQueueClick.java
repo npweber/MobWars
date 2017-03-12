@@ -1,6 +1,6 @@
 package nathan.apes.mw.event.lobby;
 
-import nathan.apes.mw.func.world.lobby.InitLobbyWorld;
+import nathan.apes.mw.world.lobby.InitLobbyWorld;
 import nathan.apes.mw.util.PlayerQueue;
 
 import org.bukkit.*;
@@ -12,40 +12,45 @@ import org.bukkit.inventory.*;
 
 public class EventQueueClick implements Listener{
     
+    private boolean hasClked = false;
+    
     @EventHandler
     public void onClick(PlayerInteractEvent pie){
         
         Player clker = pie.getPlayer();
         
-        ItemStack iteml = new ItemStack(Material.NETHER_STAR);
-        
         if(clker.getWorld().equals(InitLobbyWorld.lobbyw)){
-        
-            if(pie.getAction().equals(Action.LEFT_CLICK_AIR)){
+    
+            if(pie.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 
-                if(pie.getItem().equals(iteml)){
+                if(pie.hasItem()){
                 
-                    for(int i = 0; i < PlayerQueue.players.size(); i++){
-                
-                        if(PlayerQueue.players.get(i).equals(clker)){
-
-                            clker.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.DARK_RED + "You are already in the Queue...");             
-                
-                        }
-                    
-                        else {
+                    if(pie.getItem().equals(new ItemStack(Material.NETHER_STAR))){
                         
-                            PlayerQueue.players.add(clker);
-                     
-                            clker.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GOLD + "You've been added to the Queue. Wait until you've got your opponent, so you can start the match!");
-                     
+                        if(hasClked == false){
+                            
+                            PlayerQueue.playerpair.add(clker);
+                            
+                            hasClked = true;
+                            
+                            clker.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have been added to the Queue. Once an opponent is found, your game will start...");
+                            
                         }
-                
+                        
+                        else {
+                            
+                            PlayerQueue.playerpair.remove(clker);
+                            
+                            hasClked = false;
+                            
+                            clker.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GOLD + "You have been removed from the Queue. You can come back anytime...");
+                            
+                        }
+    
                     }
                     
                 }
 
-            
             }
         
         }

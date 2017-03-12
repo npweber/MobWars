@@ -1,4 +1,4 @@
-package nathan.apes.mw.func.world.battle;
+package nathan.apes.mw.world.battle;
 
 import nathan.apes.mw.event.battle.*;
 import nathan.apes.mw.main.MobWars;

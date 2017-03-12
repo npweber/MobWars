@@ -1,4 +1,4 @@
-package nathan.apes.mw.func.world.lobby;
+package nathan.apes.mw.world.lobby;
 
 import nathan.apes.mw.main.MobWars;
 import nathan.apes.mw.world.CheckWorld;

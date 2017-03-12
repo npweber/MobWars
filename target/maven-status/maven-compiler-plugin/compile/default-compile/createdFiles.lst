@@ -1,0 +1,10 @@
+nathan/apes/mw/world/lobby/InitLobbyWorld.class
+nathan/apes/mw/main/MobWars.class
+nathan/apes/mw/world/CheckWorld.class
+nathan/apes/mw/world/battle/FindBattleground.class
+nathan/apes/mw/event/battle/EventPlayerMoveOut.class
+nathan/apes/mw/util/PlayerQueue.class
+nathan/apes/mw/event/lobby/EventQueueClick.class
+nathan/apes/mw/util/Battle.class
+nathan/apes/mw/util/PlayerQueue$1.class
+nathan/apes/mw/world/battle/InitBattleWorld.class

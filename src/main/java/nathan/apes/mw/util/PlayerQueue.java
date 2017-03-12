@@ -1,7 +1,7 @@
 package nathan.apes.mw.util;
 
 import nathan.apes.mw.main.MobWars;
-import nathan.apes.mw.func.world.battle.*;
+import nathan.apes.mw.world.battle.*;
 
 import java.util.*;
 
@@ -12,11 +12,9 @@ import org.bukkit.scheduler.*;
 
 public class PlayerQueue {
     
-    public static ArrayList<Player> players = new ArrayList<Player>();
+    public static ArrayList<Player> playerpair = new ArrayList<Player>();
     
-    public ArrayList<Player> playerpair = new ArrayList<Player>();
-    
-    public ArrayList<Battle> currbattles = new ArrayList<Battle>();
+    public static ArrayList<Battle> currbattles = new ArrayList<Battle>();
     
     private int battleind = -1;
     
@@ -40,14 +38,6 @@ public class PlayerQueue {
     
     public void matchPlayer(){
         
-        if(players.size() > 0 && playerpair.size() < 2){
-            
-            playerpair.add(players.get(0));
-            
-            players.remove(players.get(0));
-            
-        }
-        
         if(playerpair.size() == 2){
             
             Player p1 = playerpair.get(0);
@@ -57,11 +47,12 @@ public class PlayerQueue {
             
             currbattles.add(new Battle(p1, p2, new FindBattleground().findBattleground(), battleind));
             
-            playerpair.get(0).sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have an opponent! " + ChatColor.RESET + "(" + ChatColor.GOLD + playerpair.get(1).getPlayerListName() + ChatColor.RESET + ")" + ChatColor.GREEN + " It's now time for the battle!");
-            playerpair.get(1).sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have an opponent! " + ChatColor.RESET + "(" + ChatColor.GOLD + playerpair.get(0).getPlayerListName() + ChatColor.RESET + ")" + ChatColor.GREEN + " It's now time for the battle!");
+            p1.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have an opponent! " + ChatColor.RESET + "(" + ChatColor.GOLD + p2.getPlayerListName() + ChatColor.RESET + ")" + ChatColor.GREEN + " It's now time for the battle!");
+            p2.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have an opponent! " + ChatColor.RESET + "(" + ChatColor.GOLD + p1.getPlayerListName() + ChatColor.RESET + ")" + ChatColor.GREEN + " It's now time for the battle!");
+            
+            playerpair.clear();
             
         }
-        
         
     }
     

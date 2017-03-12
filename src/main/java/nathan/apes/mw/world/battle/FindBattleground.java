@@ -1,4 +1,4 @@
-package nathan.apes.mw.func.world.battle;
+package nathan.apes.mw.world.battle;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class FindBattleground{
         
         ArrayList<Vector> areas = new ArrayList<Vector>();
         
-        int Xbndarena = new Random().nextInt(100000000);
+        int Xbndarena = new Random().nextInt(20000000);
         
         int Zbndarena = Xbndarena + 200;         
         
