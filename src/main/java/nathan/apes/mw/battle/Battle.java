@@ -1,4 +1,7 @@
-package nathan.apes.mw.util;
+package nathan.apes.mw.battle;
+
+import nathan.apes.mw.main.MobWars;
+import nathan.apes.mw.event.battle.*;
 
 import java.util.*;
 
@@ -7,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 public class Battle{
@@ -17,6 +21,8 @@ public class Battle{
     public Vector battlearea;
     
     public int battleindex;
+    
+    public static ArrayList<Squad> squads = new ArrayList<Squad>();
     
     public Battle(Player p1, Player p2, Vector grounds, int index){
         
@@ -29,6 +35,13 @@ public class Battle{
         
         teleportPlayers();
         giveBattleItems();
+        
+        JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
+        
+        //mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);
+        //Enable when fixed...
+        
+        mainclass.getServer().getPluginManager().registerEvents(new EventPlaceSquad(), mainclass);
         
     }    
 

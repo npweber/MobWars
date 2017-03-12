@@ -1,5 +1,6 @@
 package nathan.apes.mw.event.battle;
 
+import nathan.apes.mw.battle.Battle;
 import nathan.apes.mw.util.*;
 
 import org.bukkit.*;

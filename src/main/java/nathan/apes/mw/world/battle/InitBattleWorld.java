@@ -1,6 +1,5 @@
 package nathan.apes.mw.world.battle;
 
-import nathan.apes.mw.event.battle.*;
 import nathan.apes.mw.main.MobWars;
 import nathan.apes.mw.world.CheckWorld;
 
@@ -34,8 +33,6 @@ public class InitBattleWorld {
         
         battlew = Bukkit.getWorld("mw_BattleWorld");
         //Change to config later...
-        
-        mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);        
         
     }
     

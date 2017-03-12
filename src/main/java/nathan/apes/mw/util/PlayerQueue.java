@@ -1,5 +1,6 @@
 package nathan.apes.mw.util;
 
+import nathan.apes.mw.battle.Battle;
 import nathan.apes.mw.main.MobWars;
 import nathan.apes.mw.world.battle.*;
 
