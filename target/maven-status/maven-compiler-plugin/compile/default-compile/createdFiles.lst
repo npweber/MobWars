@@ -7,6 +7,8 @@ nathan/apes/mw/event/battle/EventPlayerMoveOut.class
 nathan/apes/mw/util/PlayerQueue$1.class
 nathan/apes/mw/world/battle/InitBattleWorld.class
 nathan/apes/mw/battle/Battle.class
+nathan/apes/mw/event/battle/EventClickFunctionGUI.class
+nathan/apes/mw/battle/Battle$1.class
 nathan/apes/mw/world/CheckWorld.class
 nathan/apes/mw/util/PlayerQueue.class
 nathan/apes/mw/event/lobby/EventQueueClick.class

@@ -1,6 +1,7 @@
 package nathan.apes.mw.util;
 
 import nathan.apes.mw.battle.Battle;
+import nathan.apes.mw.battle.util.UpdateBattleStage;
 import nathan.apes.mw.main.MobWars;
 import nathan.apes.mw.world.battle.*;
 
@@ -46,6 +47,8 @@ public class PlayerQueue {
             
             battleind++;
             
+            if(battleind == 0){ new UpdateBattleStage(); }
+            
             currbattles.add(new Battle(p1, p2, new FindBattleground().findBattleground(), battleind));
             
             p1.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GREEN + "You have an opponent! " + ChatColor.RESET + "(" + ChatColor.GOLD + p2.getPlayerListName() + ChatColor.RESET + ")" + ChatColor.GREEN + " It's now time for the battle!");
@@ -56,5 +59,7 @@ public class PlayerQueue {
         }
         
     }
+    
+    public static Battle getBattle(int index){ return currbattles.get(index); }
     
 }

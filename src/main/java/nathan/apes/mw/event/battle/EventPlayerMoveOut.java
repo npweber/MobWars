@@ -19,7 +19,7 @@ public class EventPlayerMoveOut implements Listener{
             
             Battle b = PlayerQueue.currbattles.get(i);
             
-            if(b.getPlayers().contains(pl)){
+            if(b.isPlayerInBattle(pl) == true){
                 
                 int x = (int) b.battlearea.getX();
                 int z = (int) b.battlearea.getZ(); 

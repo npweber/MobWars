@@ -17,46 +17,44 @@ public class EventPlaceSquad implements Listener{
         
         Player pl = pie.getPlayer();
         
-        for(int i = 0; i < PlayerQueue.currbattles.size(); i++){
+        if(Battle.isPlayerInBattle(pl)){
             
-            Battle b = PlayerQueue.currbattles.get(i);
-            
-            if(b.getPlayers().contains(pl)){
+            if(pie.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 
-                if(pie.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-                    
-                    //Check if outside boundries... (Later)
-                            
-                    EntityType mobtype = null;
-                    
-                    Block clkedb = pie.getClickedBlock();
-                    
-                    Location clkedloc = clkedb.getLocation();
-                    
-                    int ind = -1;
-                    
-                    if(pl.getInventory().getHeldItemSlot() == 0){
+                //Check if outside boundries... (Later)
                         
-                        mobtype = EntityType.ZOMBIE;
-                     
-                        if(pl.getInventory().getItemInMainHand().getAmount() == 3){ ind = 0; }
-                        if(pl.getInventory().getItemInMainHand().getAmount() == 2){ ind = 1; }
-                        if(pl.getInventory().getItemInMainHand().getAmount() == 1){ ind = 2; }
-                        
-                    }
+                EntityType mobtype = null;
+                
+                Block clkedb = pie.getClickedBlock();
+                
+                Location clkedloc = clkedb.getLocation();
+                
+                int ind = -1;
+                
+                if(pl.getInventory().getHeldItemSlot() == 0){
                     
-                    else if(pl.getInventory().getHeldItemSlot() == 1){
-                        
-                        mobtype = EntityType.SKELETON;
-                        
-                        if(pl.getInventory().getItemInMainHand().getAmount() == 2){ ind = 3; }
-                        if(pl.getInventory().getItemInMainHand().getAmount() == 1){ ind = 4; }
-                        
-                    }
-                    
-                    Battle.squads.add(new Squad(mobtype, pl, clkedloc, ind));
+                    mobtype = EntityType.ZOMBIE;
+                 
+                    if(pl.getInventory().getItemInMainHand().getAmount() == 3){ ind = 1; }
+                    if(pl.getInventory().getItemInMainHand().getAmount() == 2){ ind = 2; }
+                    if(pl.getInventory().getItemInMainHand().getAmount() == 1){ ind = 3; }
                     
                 }
+                
+                else if(pl.getInventory().getHeldItemSlot() == 1){
+                    
+                    mobtype = EntityType.SKELETON;
+                    
+                    if(pl.getInventory().getItemInMainHand().getAmount() == 2){ ind = 4; }
+                    if(pl.getInventory().getItemInMainHand().getAmount() == 1){ ind = 5; }
+                    
+                }
+                
+                Battle b = Battle.getPlayerBattle(pl);
+                
+                b.squads.add(new Squad(mobtype, pl, clkedloc, ind));
+                
+                b.amtsquads++;
                 
             }
             

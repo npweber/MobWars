@@ -2,6 +2,7 @@ package nathan.apes.mw.battle;
 
 import nathan.apes.mw.main.MobWars;
 import nathan.apes.mw.event.battle.*;
+import nathan.apes.mw.util.*;
 
 import java.util.*;
 
@@ -11,18 +12,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.*;
 import org.bukkit.util.Vector;
 
 public class Battle{
     
-    public static Player bp1;
-    public static Player bp2;
+    public int battlestage = -1;
+    
+    public Player bp1;
+    public Player bp2;
     
     public Vector battlearea;
     
     public int battleindex;
     
     public static ArrayList<Squad> squads = new ArrayList<Squad>();
+    
+    public static int amtsquads = -1;
+    
+    //Fix instance issue... 
     
     public Battle(Player p1, Player p2, Vector grounds, int index){
         
@@ -33,8 +41,32 @@ public class Battle{
         
         battleindex = index;
         
-        teleportPlayers();
-        giveBattleItems();
+        initBattle(index, grounds);
+        
+    }    
+    
+    public void initBattle(int ind, Vector telearea){
+        
+        Battle b = PlayerQueue.getBattle(ind);
+        
+        Player p1 = Battle.getBattlePlayers(b).get(0);
+        Player p2 = Battle.getBattlePlayers(b).get(1);
+        
+        teleportPlayers(p1, p2, telearea);
+        
+        p1.setAllowFlight(true);
+        p2.setAllowFlight(true);
+        
+        p1.setInvulnerable(true);
+        p2.setInvulnerable(true);
+        
+        p1.playSound(p1.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+        p2.playSound(p2.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+        
+        giveBattleItems(p1, p2);
+        
+        p1.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.AQUA + "Game started! Fly around and start deploying your " + ChatColor.GOLD + "Mob Squadrons" + ChatColor.AQUA + ". Click on a block to do so.");
+        p2.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.AQUA + "Game started! Fly around and start deploying your " + ChatColor.GOLD + "Mob Squadrons" + ChatColor.AQUA + ". Click on a block to do so.");
         
         JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
         
@@ -43,24 +75,20 @@ public class Battle{
         
         mainclass.getServer().getPluginManager().registerEvents(new EventPlaceSquad(), mainclass);
         
-    }    
-
-    public ArrayList<Player> getPlayers(){
-
-        ArrayList<Player> pls = new ArrayList<Player>();     
-        
-        pls.add(bp1);
-        pls.add(bp2);
-    
-        return pls; 
     }
 
-    public void teleportPlayers(){
+    public void initMainBattleStage(){
+        
+        //Start the Main Battle...
+        
+    }
+    
+    private void teleportPlayers(Player p1, Player p2, Vector area){
         
         World bw = Bukkit.getWorld("mw_BattleWorld"); 
         
-        double x = (double) battlearea.getX() + 100.0;
-        double z = (double) battlearea.getX() + 5.0; 
+        double x = (double) area.getX() + 100.0;
+        double z = (double) area.getX() + 5.0; 
         
         Block yb = bw.getHighestBlockAt( (int) x, (int) z);
         //Change to config later...
@@ -76,12 +104,12 @@ public class Battle{
         
         Location p2loc = new Location(bw, x, y2, z2);
         
-        bp1.teleport(p1loc);
-        bp2.teleport(p2loc);
+        p1.teleport(p1loc);
+        p2.teleport(p2loc);
         
     }
     
-    public void giveBattleItems(){
+    private void giveBattleItems(Player p1, Player p2){
         
         ItemStack bizomb = new ItemStack(Material.IRON_SPADE, 3);
         ItemStack biskel = new ItemStack(Material.BOW, 2);
@@ -94,12 +122,50 @@ public class Battle{
         im2.setDisplayName("Place Skelebow Squad");
         biskel.setItemMeta(im2);
         
-        bp1.getInventory().setItem(0, bizomb);
-        bp2.getInventory().setItem(0, bizomb);
+        p1.getInventory().setItem(0, bizomb);
+        p2.getInventory().setItem(0, bizomb);
         
-        bp1.getInventory().setItem(1, biskel);
-        bp2.getInventory().setItem(1, biskel);
+        p1.getInventory().setItem(1, biskel);
+        p2.getInventory().setItem(1, biskel);
         
+    }
+
+    public static ArrayList<Player> getBattlePlayers(Battle b){
+
+        ArrayList<Player> pls = new ArrayList<Player>();     
+        
+        pls.add(b.bp1);
+        pls.add(b.bp2);
+    
+        return pls; 
+    }
+    
+    public static Battle getPlayerBattle(Player p){
+        
+        Battle b = null;
+        
+        for(int i = 0; i < PlayerQueue.currbattles.size(); i++){
+        
+            if(Battle.getBattlePlayers(PlayerQueue.currbattles.get(i)).contains(p)){ b = PlayerQueue.currbattles.get(i); }
+    
+        }
+
+        return b;
+    }
+    
+    public static boolean isPlayerInBattle(Player p){
+        
+        boolean b = false;
+        
+        for(int i = 0; i < PlayerQueue.currbattles.size(); i++){
+        
+            if(Battle.getBattlePlayers(PlayerQueue.currbattles.get(i)).contains(p)){ b = true; }
+        
+            else { b = false; }
+        
+        }
+        
+        return b;
     }
     
 }

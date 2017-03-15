@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>MobWars</groupId>
     <artifactId>MobWars</artifactId>
-    <version>b1.1.0</version>
+    <version>b1.1.5</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
