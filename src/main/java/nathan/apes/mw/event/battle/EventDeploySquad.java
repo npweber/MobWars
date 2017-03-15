@@ -1,7 +1,6 @@
 package nathan.apes.mw.event.battle;
 
 import nathan.apes.mw.battle.*;
-import nathan.apes.mw.util.*;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -10,7 +9,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 
-public class EventPlaceSquad implements Listener{
+public class EventDeploySquad implements Listener{
     
     @EventHandler
     public void onPlace(PlayerInteractEvent pie){
@@ -53,8 +52,6 @@ public class EventPlaceSquad implements Listener{
                 Battle b = Battle.getPlayerBattle(pl);
                 
                 b.squads.add(new Squad(mobtype, pl, clkedloc, ind));
-                
-                b.amtsquads++;
                 
             }
             

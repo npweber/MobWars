@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.*;
 import org.bukkit.util.Vector;
 
 public class Battle{
@@ -26,9 +25,7 @@ public class Battle{
     
     public int battleindex;
     
-    public static ArrayList<Squad> squads = new ArrayList<Squad>();
-    
-    public static int amtsquads = -1;
+    public ArrayList<Squad> squads = new ArrayList<Squad>();
     
     //Fix instance issue... 
     
@@ -41,7 +38,7 @@ public class Battle{
         
         battleindex = index;
         
-        initBattle(index, grounds);
+        initBattle(battleindex, battlearea);
         
     }    
     
@@ -73,7 +70,7 @@ public class Battle{
         //mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);
         //Enable when fixed...
         
-        mainclass.getServer().getPluginManager().registerEvents(new EventPlaceSquad(), mainclass);
+        mainclass.getServer().getPluginManager().registerEvents(new EventDeploySquad(), mainclass);
         
     }
 

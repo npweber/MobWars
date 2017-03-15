@@ -1,5 +1,4 @@
 nathan/apes/mw/battle/Squad.class
-nathan/apes/mw/event/battle/EventPlaceSquad.class
 nathan/apes/mw/world/lobby/InitLobbyWorld.class
 nathan/apes/mw/main/MobWars.class
 nathan/apes/mw/world/battle/FindBattleground.class
@@ -8,7 +7,9 @@ nathan/apes/mw/util/PlayerQueue$1.class
 nathan/apes/mw/world/battle/InitBattleWorld.class
 nathan/apes/mw/battle/Battle.class
 nathan/apes/mw/event/battle/EventClickFunctionGUI.class
-nathan/apes/mw/battle/Battle$1.class
+nathan/apes/mw/battle/util/UpdateBattleStage.class
+nathan/apes/mw/battle/util/UpdateBattleStage$1.class
 nathan/apes/mw/world/CheckWorld.class
 nathan/apes/mw/util/PlayerQueue.class
 nathan/apes/mw/event/lobby/EventQueueClick.class
+nathan/apes/mw/event/battle/EventDeploySquad.class

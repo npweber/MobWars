@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Squad {
     
-    public EntityType squad;
+    public EntityType squadclass;
     
     public ArrayList<LivingEntity> squadentities = new ArrayList<LivingEntity>();
     
@@ -24,7 +24,7 @@ public class Squad {
     
     public Squad(EntityType squadtype, Player owner, Location spawnloc, int index){
         
-        squad = squadtype;
+        squadclass = squadtype;
         
         squadowner = owner;
         
@@ -32,22 +32,24 @@ public class Squad {
         
         JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
         
-        spawnSquad(squadtype, spawnloc);
+        spawnSquad(squadclass, squadowner, squadindex, spawnloc);
         
-        openSquadGUI(owner, index);
+        openSquadGUI(squadowner, squadindex);
         
         mainclass.getServer().getPluginManager().registerEvents(new EventClickFunctionGUI(), mainclass);
         
     }
     
-    public void spawnSquad(EntityType spawntype, Location loc){
+    public void spawnSquad(EntityType spawntype, Player owner, int index, Location loc){
         
         World bw = Bukkit.getWorld("mw_BattleWorld");
         //Change to config later...
         
         Location placementloc = null;
         
-        float yaw = squadowner.getLocation().getYaw();
+        Squad sq = getSquadPlayer(owner, index);
+        
+        float yaw = owner.getLocation().getYaw();
         
         for(int i = 0; i < 5; i++){
         
@@ -56,9 +58,9 @@ public class Squad {
             if(yaw > 180 && yaw < 270){ placementloc = new Location(bw, loc.getX() - (double) i, loc.getY(), loc.getZ()); }
             if(yaw > 270 && yaw < 360){ placementloc = new Location(bw, loc.getX(), loc.getY(), loc.getZ() - (double) i); }
             
-            squadentities.add((LivingEntity) bw.spawnEntity(placementloc, spawntype));
+            sq.squadentities.add((LivingEntity) bw.spawnEntity(placementloc, spawntype));
             
-            LivingEntity e = squadentities.get(i); 
+            LivingEntity e = sq.squadentities.get(i); 
             
             e.setAI(false);
             e.setSilent(true);
@@ -121,10 +123,12 @@ public class Squad {
         
     }
     
-    public static void setAI(int typeAI, int index, Player sqowner){
+    public void setAI(int typeAI, int index, Player sqowner){
         
         
         
     }
+    
+    public static Squad getSquadPlayer(Player owner, int index){ return Battle.getPlayerBattle(owner).squads.get(index); }
     
 }
