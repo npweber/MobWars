@@ -27,8 +27,6 @@ public class Battle{
     
     public ArrayList<Squad> squads = new ArrayList<Squad>();
     
-    //Fix instance issue... 
-    
     public Battle(Player p1, Player p2, Vector grounds, int index){
         
         bp1 = p1;
@@ -68,7 +66,7 @@ public class Battle{
         JavaPlugin mainclass = JavaPlugin.getProvidingPlugin(MobWars.class);
         
         //mainclass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainclass);
-        //Enable when fixed...
+        //Enable after Beta...
         
         mainclass.getServer().getPluginManager().registerEvents(new EventDeploySquad(), mainclass);
         
