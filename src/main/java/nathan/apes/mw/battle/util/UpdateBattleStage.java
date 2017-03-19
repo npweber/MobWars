@@ -25,7 +25,7 @@ public class UpdateBattleStage {
                     
                     int sqamt = b.squads.size();
                     
-                    if(sqamt == 10){ b.initMainBattleStage(); }
+                    if(sqamt == 10){ b.initMainBattleStage(b, b.battlearea); }
                 
                 }
             
