@@ -2,11 +2,12 @@ package nathan.apes.mw.event.battle;
 
 import nathan.apes.mw.battle.*;
 
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
 
-public class EventClickFunctionGUI implements Listener{
+public class EventClickAIGUI implements Listener{
     
     @EventHandler
     public void onClick(InventoryClickEvent ice){
@@ -19,11 +20,11 @@ public class EventClickFunctionGUI implements Listener{
                 
             int type = -1;
             
-            if(ice.getSlot() == 11){ type = 1; }
+            if(ice.getSlot() == 11){ type = 1; clkpl.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GOLD + "Set Squadron to ATTACK..."); }
             
-            if(ice.getSlot() == 13){ type = 2; }
+            if(ice.getSlot() == 13){ type = 2; clkpl.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GOLD + "Set Squadron to GUARD..."); }
             
-            if(ice.getSlot() == 15){ type = 3; }
+            if(ice.getSlot() == 15){ type = 3; clkpl.sendMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.GOLD + "Set Squadron to SNIPE..."); }
         
             String numstr = invname.substring(13, 13);
             
@@ -37,11 +38,12 @@ public class EventClickFunctionGUI implements Listener{
                 
                 if(sq.squadindex == ind){
                     
-                    sq.setAI(type, ind, clkpl);
+                    sq.ai = type;
                     
                 }
                 
             }
+        
         }   
 
     }

@@ -2,6 +2,8 @@ package nathan.apes.mw.event.battle;
 
 import nathan.apes.mw.battle.*;
 
+import java.util.ArrayList;
+
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
@@ -50,6 +52,10 @@ public class EventDeploySquad implements Listener{
                 }
                 
                 Battle b = Battle.getPlayerBattle(pl);
+                
+                ArrayList<Player> bpls = Battle.getBattlePlayers(b);
+                
+                if(bpls.indexOf(pl) == 1){ ind =+ 5; }
                 
                 b.squads.add(new Squad(mobtype, pl, clkedloc, ind));
                 
