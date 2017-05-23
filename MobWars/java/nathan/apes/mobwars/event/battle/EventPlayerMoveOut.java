@@ -1,6 +1,7 @@
 package nathan.apes.mobwars.event.battle;
 
 import nathan.apes.mobwars.battle.Battle;
+import nathan.apes.mobwars.battle.Squad;
 import nathan.apes.mobwars.util.*;
 
 import org.bukkit.*;
@@ -8,12 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
-//EventPlayerMoveOut: Restrains the player to the Battegrounds
+//EventPlayerMoveOut: Restrains the player to the Battegrounds & If they are in a squad they are restrained to a squad
 
 public class EventPlayerMoveOut implements Listener{
 
     @EventHandler
-    public void onPlayerMoveOutofBounds(PlayerMoveEvent pme){
+    public void onPlayerMoveOutOfBounds(PlayerMoveEvent pme){
 
         //Get Player
         Player pl = pme.getPlayer();
@@ -21,8 +22,9 @@ public class EventPlayerMoveOut implements Listener{
         //Manage all Battles triggering the event
         for(int i = 0; i < BattleManager.currbattles.size(); i++){
             Battle b = BattleManager.currbattles.get(i);
-            if(b.isPlayerInBattle(pl) == true){
 
+            //Check for if in battle
+            if(b.isPlayerInBattle(pl)){
                 int x = (int) b.battlearea.getX();
                 int z = (int) b.battlearea.getZ();
                 Location ploc = pl.getLocation();
@@ -35,11 +37,15 @@ public class EventPlayerMoveOut implements Listener{
                     if(plx > 0){ newloc.setX(plx - 1); pl.teleport(newloc); }
                     if(plx < 0){ newloc.setX(plx + 1); pl.teleport(newloc); }
                 }
-
                 if(plz > z || plz < z - 200){
                     if(plz > 0){ newloc.setZ(plz - 1); pl.teleport(newloc); }
                     if(plz < 0){ newloc.setZ(plz + 1); pl.teleport(newloc); }
                 }
+
+                //Check if in a squad
+                if(Squad.isPlayerInSquad(pl) && Squad.getSquadPlayer(pl, b.battleindex).getInForm())
+                    //If so, restrain to position
+                    pl.teleport(pl.getLocation());
             }
         }
     }

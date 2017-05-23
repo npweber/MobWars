@@ -1,6 +1,7 @@
 package nathan.apes.mobwars.battle;
 
 import nathan.apes.mobwars.event.battle.*;
+import nathan.apes.mobwars.event.battle.squad.EventCommanderAction;
 import nathan.apes.mobwars.util.*;
 
 import java.util.*;
@@ -60,7 +61,10 @@ public class Battle{
         );
 
         //Assign commanders
-        Player[] opposingCommanders = new Player[]{battlePlayers.get(new Random().nextInt(battlePlayers.size() - 1)), battlePlayers.get(new Random().nextInt(battlePlayers.size() - 2))};
+        Player[] opposingCommanders = new Player[]{
+            battlePlayers.get(new Random().nextInt(battlePlayers.size() - 1)),
+            battlePlayers.get(new Random().nextInt(battlePlayers.size() - 2))
+        };
 
         //Assign commanding properties
         opposingCommanders[0].setAllowFlight(true);
@@ -123,14 +127,14 @@ public class Battle{
         commanderLocations[0].subtract(4, 2, 0)};
 
         //Create Squads
-        for(int i = 0; i < squadPlayerLists.length; i++)
-            if(i < 2)
-                squads.add(new Squad(opposingCommanders[0], squadLocations[i], i));
-            else
-                squads.add(new Squad(opposingCommanders[1], squadLocations[i], i));
+        for(int i = 0; i < squadPlayerLists.length; i++) {
+            squads.add(new Squad(opposingCommanders[0], squadPlayerLists[i], squadLocations[i], i));
+            squads.add(new Squad(opposingCommanders[1], squadPlayerLists[i], squadLocations[i], i));
+        }
 
-        //mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
-        //Enable after Beta...
+        //Register function events
+        mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
+        mainClass.getServer().getPluginManager().registerEvents(new EventCommanderAction(), mainClass);
     }
 
     //Get the players in an instance

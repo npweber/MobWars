@@ -31,11 +31,7 @@ public class MobWars extends JavaPlugin{
 
     //Disable
     public void onDisable(){
-
         //Log Disable
         this.getLogger().info("Disabling MobWars...");
-
-        //Cancel tasks
-        this.getServer().getScheduler().cancelTasks(this);
     }
 }
