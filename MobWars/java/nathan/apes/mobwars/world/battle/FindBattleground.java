@@ -2,6 +2,8 @@ package nathan.apes.mobwars.world.battle;
 
 import java.util.*;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 //FindBattleground: Utility that finds an open Battleground for each Match
@@ -19,6 +21,7 @@ public class FindBattleground{
         double y = InitBattleWorld.battlew.getHighestBlockAt(xBnd, zBnd).getY();
         Vector battlebnds = new Vector((double) xBnd, y, (double) zBnd);
         areas.add(battlebnds);
+        //Change to config fields...
 
         //Check if the area has been a previous battleground
         if(areas.size() > 1){
@@ -34,6 +37,12 @@ public class FindBattleground{
                     findBattleground();
             }
         }
+
+        //Choose another area if it is not a suitable battleground
+        World bw = Bukkit.getWorld("mw_BattleWorld");
+        if(battlebnds.toLocation(bw).getBlock().isLiquid() || battlebnds.toLocation(bw).getBlock().isLiquid())
+            findBattleground();
+
         return battlebnds;
     }
     

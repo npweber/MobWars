@@ -1,11 +1,11 @@
 package nathan.apes.mobwars.world.lobby;
 
+import nathan.apes.mobwars.main.MobWars;
 import nathan.apes.mobwars.world.CheckWorld;
 import nathan.apes.mobwars.event.lobby.*;
 
 import org.bukkit.*;
-
-import static nathan.apes.mobwars.main.MobWars.mainClass;
+import org.bukkit.plugin.java.JavaPlugin;
 
 //InitLobbyWorld: System for LobbyWorld and its Environment
 
@@ -16,6 +16,9 @@ public class InitLobbyWorld {
 
     //MatchMaking Switch
     private static boolean matchMakingEnabled;
+
+    //Refrence to main
+    private JavaPlugin mainClass = JavaPlugin.getProvidingPlugin(MobWars.class);
 
     public InitLobbyWorld(){
 

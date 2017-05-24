@@ -1,16 +1,17 @@
 package nathan.apes.mobwars.util;
 
 import nathan.apes.mobwars.battle.Battle;
-import nathan.apes.mobwars.battle.util.UpdateBattleStage;
+import nathan.apes.mobwars.main.MobWars;
 import nathan.apes.mobwars.world.battle.*;
 
 import java.util.*;
 
-import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
+import static nathan.apes.mobwars.main.MobWars.scheduler;
 
 //The Battle Manager: Manages and Creates all on-going Battles
 
@@ -22,33 +23,25 @@ public class BattleManager {
     //All ongoing battles
     public static ArrayList<Battle> currbattles = new ArrayList<>();
 
-    //Battle Environment Runner Switch
-    public static boolean battlesEnabled = false;
-
     public static int battleind = -1;
     //Remove on decision
 
-    //Initialize BattleManaging/PlayerMatchMaking
+    //Main reference
+    private final JavaPlugin mainClass = JavaPlugin.getProvidingPlugin(MobWars.class);
+
+    //Initialize PlayerMatchMaking
     public BattleManager(){
-        do {
-            matchMaking();
-        } while (InitLobbyWorld.getMatchMakingStatus());
-        battlesEnabled = true;
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> matchMaking(), 0L, 40L);
     }
 
     //Matchmake players in the BattlePlayerList
     private void matchMaking(){
-        if(battlePlayers.size() == 18){
+        if(battlePlayers.size() == 1){
 
             battleind++;
 
-            //if(battleind == 0){ new UpdateBattleStage(); }
-            //(Temp) Remove or keep on Decision
-
             battlePlayers.forEach(player -> player.sendMessage(loggingPrefix + ChatColor.GREEN + "You have a game! It's now time for the battle!"));
             currbattles.add(new Battle(battlePlayers, new FindBattleground().findBattleground(), battleind));
-
-            battlePlayers.clear();
         }
     }
 

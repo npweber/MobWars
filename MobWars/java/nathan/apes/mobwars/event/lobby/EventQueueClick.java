@@ -16,9 +16,6 @@ import static nathan.apes.mobwars.util.BattleManager.battlePlayers;
 
 public class EventQueueClick implements Listener{
 
-    //Click Control Util Field
-    private boolean hasClked = false;
-
     @EventHandler
     public void onClick(PlayerInteractEvent pie){
 
@@ -32,16 +29,13 @@ public class EventQueueClick implements Listener{
                     if(pie.getItem().equals(new ItemStack(Material.NETHER_STAR))){
 
                         //If they are not in the List, add them
-                        if(hasClked == false){
+                        if(!(battlePlayers.contains(clker))){
                             battlePlayers.add(clker);
-                            hasClked = true;
                             clker.sendMessage(loggingPrefix + ChatColor.GREEN + "You have been added to the list of game-seeking players. When everyone wants some action, your game will start...");
                         }
-
                         //If they are, remove them
                         else {
                             battlePlayers.remove(clker);
-                            hasClked = false;
                             clker.sendMessage(loggingPrefix + ChatColor.GOLD + "You have been removed from the list. You can come back anytime...");
                         }
                     }

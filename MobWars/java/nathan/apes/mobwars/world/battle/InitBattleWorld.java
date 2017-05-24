@@ -1,11 +1,12 @@
 package nathan.apes.mobwars.world.battle;
 
+import nathan.apes.mobwars.main.MobWars;
 import nathan.apes.mobwars.world.CheckWorld;
 
 import org.bukkit.*;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
-import static nathan.apes.mobwars.main.MobWars.mainClass;
 
 //InitBattleWorld: System for BattleWorld and its environment
 
@@ -13,6 +14,9 @@ public class InitBattleWorld {
 
     //World
     public static World battlew;
+
+    //Refrence to main
+    private JavaPlugin mainClass = JavaPlugin.getProvidingPlugin(MobWars.class);
 
     public InitBattleWorld(){
 
