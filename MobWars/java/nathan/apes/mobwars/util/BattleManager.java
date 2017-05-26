@@ -40,7 +40,7 @@ public class BattleManager {
 
             battleind++;
 
-            battlePlayers.forEach(player -> player.sendMessage(loggingPrefix + ChatColor.GREEN + "You have a game! It's now time for the battle!"));
+            battlePlayers.forEach(player -> player.sendMessage(loggingPrefix + ChatColor.GOLD + "You have a game! It's now time for the battle!"));
             currbattles.add(new Battle(battlePlayers, new FindBattleground().findBattleground(), battleind));
         }
     }

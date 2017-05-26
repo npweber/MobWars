@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
+import java.sql.SQLInput;
+
 import static nathan.apes.mobwars.util.BattleManager.battlePlayers;
 import static nathan.apes.mobwars.util.BattleManager.currbattles;
 
@@ -24,10 +26,11 @@ public class EventPlayerMoveOut implements Listener{
 
         //Manage all Battles triggering the event
         for(int i = 0; i < BattleManager.currbattles.size(); i++){
+
             Battle b = BattleManager.currbattles.get(i);
 
             //Check for if in battle
-            if(b.isPlayerInBattle(pl)) {
+            if(Battle.isPlayerInBattle(pl)) {
                 int x = (int) b.battlearea.getX();
                 int z = (int) b.battlearea.getZ();
                 Location ploc = pl.getLocation();
@@ -35,15 +38,26 @@ public class EventPlayerMoveOut implements Listener{
                 double plz = ploc.getZ();
 
                 //Send back if trying to go out
-                if ((plx < x) || (plx > (x + 200)))
+                if ((plx < x) || (plx > (x + 200))) {
                     pl.teleport(ploc);
-                if ((plz < (z - 200)) || (plz > z))
+                    pl.sendMessage(ChatColor.RED + "Don't leave the battle!");
+                }
+                if ((plz < (z - 200)) || (plz > z)) {
                     pl.teleport(ploc);
+                    pl.sendMessage(ChatColor.RED + "Don't leave the battle!");
+                }
 
                 //Check if in a squad
-                if (Squad.isPlayerInSquad(pl) && Squad.getSquadPlayer(pl).getInForm())
-                    //If so, restrain to position
-                    pl.teleport(ploc);
+                if (Squad.isPlayerInSquad(pl)) {
+
+                    //Define Squad Object
+                    Squad squad = Squad.getSquadPlayer(pl);
+
+                    //Check if they are in formation
+                    if(Squad.getInForm(b.squads.indexOf(squad)))
+                        //If so, restrain to position
+                        pl.teleport(ploc);
+                }
             }
         }
     }

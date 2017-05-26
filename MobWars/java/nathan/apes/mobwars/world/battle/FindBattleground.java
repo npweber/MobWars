@@ -39,6 +39,7 @@ public class FindBattleground{
         }
 
         //Choose another area if it is not a suitable battleground
+        //Expand to not choose ANY non-suitable battlegrounds
         World bw = Bukkit.getWorld("mw_BattleWorld");
         if(battlebnds.toLocation(bw).getBlock().isLiquid() || battlebnds.toLocation(bw).getBlock().isLiquid())
             findBattleground();

@@ -31,7 +31,7 @@ public class EventQueueClick implements Listener{
                         //If they are not in the List, add them
                         if(!(battlePlayers.contains(clker))){
                             battlePlayers.add(clker);
-                            clker.sendMessage(loggingPrefix + ChatColor.GREEN + "You have been added to the list of game-seeking players. When everyone wants some action, your game will start...");
+                            clker.sendMessage(loggingPrefix + ChatColor.GREEN + "You have been added to a list of players. When everyone wants some action, your game will start...");
                         }
                         //If they are, remove them
                         else {
