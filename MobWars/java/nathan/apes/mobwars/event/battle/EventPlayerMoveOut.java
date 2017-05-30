@@ -9,11 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
-import java.sql.SQLInput;
-
-import static nathan.apes.mobwars.util.BattleManager.battlePlayers;
-import static nathan.apes.mobwars.util.BattleManager.currbattles;
-
 //EventPlayerMoveOut: Restrains the player to the Battegrounds & If they are in a squad they are restrained to a squad
 
 public class EventPlayerMoveOut implements Listener{
@@ -27,10 +22,11 @@ public class EventPlayerMoveOut implements Listener{
         //Manage all Battles triggering the event
         for(int i = 0; i < BattleManager.currbattles.size(); i++){
 
-            Battle b = BattleManager.currbattles.get(i);
+            Battle b = BattleManager.getBattle(i);
 
             //Check for if in battle
-            if(Battle.isPlayerInBattle(pl)) {
+            if(Battle.getBattlePlayers(0).contains(pl)) {
+
                 int x = (int) b.battlearea.getX();
                 int z = (int) b.battlearea.getZ();
                 Location ploc = pl.getLocation();
@@ -49,12 +45,11 @@ public class EventPlayerMoveOut implements Listener{
 
                 //Check if in a squad
                 if (Squad.isPlayerInSquad(pl)) {
-
                     //Define Squad Object
                     Squad squad = Squad.getSquadPlayer(pl);
 
                     //Check if they are in formation
-                    if(Squad.getInForm(b.squads.indexOf(squad)))
+                    if (Squad.getInForm(Battle.getSquadIndex(0, squad)))
                         //If so, restrain to position
                         pl.teleport(ploc);
                 }

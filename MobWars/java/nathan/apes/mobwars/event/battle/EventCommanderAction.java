@@ -13,14 +13,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import static nathan.apes.mobwars.battle.Battle.opposingCommanders;
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
 
 //CommanderAction Event: Listens for the commanders decisions and relays them for the troops to take action
 
 public class EventCommanderAction implements Listener {
 
-    public static Squad pickedSquad;
+    public static Squad commander1Squad;
+    public static Squad commander2Squad;
 
+    //Command the Squad
     @EventHandler
     public void onCommandingAction(PlayerInteractEvent pie){
 
@@ -29,29 +32,73 @@ public class EventCommanderAction implements Listener {
 
         //Specify conditions
         if(commander.getLocation().getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
-            if (pie.hasItem()) {
+            if (commander == opposingCommanders[0] || commander == opposingCommanders[1]) {
                 //If the item is the commanders get his action
-                if (pie.getItem().getItemMeta().getDisplayName().equalsIgnoreCase("Commander's Baton")) {
+                if (pie.getPlayer().getInventory().getHeldItemSlot() == 0) {
                     //If he points, find the location he points to and march the Squadron to the position
                     if (pie.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                         Location pointLocation = pie.getClickedBlock().getLocation();
-                        if(!(pickedSquad == null)) {
-                            pickedSquad.marchTo(pointLocation, Battle.getSquadIndex(commander, pickedSquad));
+                        if (commander == opposingCommanders[0])
+                            if (!(commander1Squad == null)) {
+                                Squad.marchTo(pointLocation, Battle.getSquadIndex(0, commander1Squad));
+                                if(Squad.getRetreatStatus(Battle.getSquadIndex(0, commander1Squad)))
+                                    Squad.setRetreatStatus(Battle.getSquadIndex(0, commander1Squad), false);
+                                commander.sendMessage(loggingPrefix + ChatColor.GREEN + "You told your selected squad to march forth.");
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        else if (!(commander2Squad == null)) {
+                            Squad.marchTo(pointLocation, Battle.getSquadIndex(0, commander2Squad));
+                            if(Squad.getRetreatStatus(Battle.getSquadIndex(0, commander2Squad)))
+                                Squad.setRetreatStatus(Battle.getSquadIndex(0, commander2Squad), false);
                             commander.sendMessage(loggingPrefix + ChatColor.GREEN + "You told your selected squad to march forth.");
-                        } else commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        } else
+                            commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                     }
                     //If he withdrawls, halt the postition
                     if (pie.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-                        if(!(pickedSquad == null)) {
-                            Squad.getSquadPlayer(commander).halt(Battle.getSquadIndex(commander, pickedSquad));
-                            commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You halted your selected Squad.");
-                        } else commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        if (commander == opposingCommanders[0])
+                            if (!(commander1Squad == null)) {
+                                Squad.halt(Battle.getSquadIndex(0, commander1Squad));
+                                if(Squad.getRetreatStatus(Battle.getSquadIndex(0, commander1Squad)))
+                                    Squad.setRetreatStatus(Battle.getSquadIndex(0, commander1Squad), false);
+                                commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You halted your selected Squad.");
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        else if (commander == opposingCommanders[1])
+                            if (!(commander2Squad == null)) {
+                                Squad.halt(Battle.getSquadIndex(0, commander2Squad));
+                                if(Squad.getRetreatStatus(Battle.getSquadIndex(0, commander2Squad)))
+                                    Squad.setRetreatStatus(Battle.getSquadIndex(0, commander2Squad), false);
+                                commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You halted your selected Squad.");
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                    }
+                }
+                //Give the retreat order, on the commanders call
+                if (pie.getPlayer().getInventory().getHeldItemSlot() == 2) {
+                    if (pie.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+                        Location pointLocation = pie.getClickedBlock().getLocation();
+                        if (commander == opposingCommanders[0])
+                            if (!(commander1Squad == null)) {
+                                Squad.marchTo(pointLocation, Battle.getSquadIndex(0, commander1Squad));
+                                Squad.setRetreatStatus(Battle.getSquadIndex(0, commander1Squad), true);
+                                commander.sendMessage(loggingPrefix + ChatColor.GREEN + "You told your selected squad to retreat.");
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        else
+                            if (!(commander2Squad == null)) {
+                                Squad.marchTo(pointLocation, Battle.getSquadIndex(0, commander2Squad));
+                                Squad.setRetreatStatus(Battle.getSquadIndex(0, commander2Squad), true);
+                                commander.sendMessage(loggingPrefix + ChatColor.GREEN + "You told your selected squad to retreat.");
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                     }
                 }
             }
         }
     }
 
+    //Pick a Squad
     @EventHandler
     public void onSquadPick(PlayerInteractAtEntityEvent pie){
 
@@ -61,12 +108,19 @@ public class EventCommanderAction implements Listener {
         //Specify conditions
         if(commander.getLocation().getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
             if (pie.getRightClicked().getType().equals(EntityType.PLAYER)) {
-                if (!(pie.getPlayer().getInventory().getItemInMainHand() == null)) {
+                if (commander == opposingCommanders[0] || commander == opposingCommanders[1]) {
                     //If the item is the commanders get his action
-                    if (pie.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("Commander's Baton")) {
+                    if (pie.getPlayer().getInventory().getHeldItemSlot() == 1) {
                         //If he points, find the squad he picks
-                        pickedSquad = Squad.getSquadPlayer((Player) pie.getRightClicked());
-                        commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You selected Squad " + (Battle.getSquadIndex(commander, pickedSquad) + 1) + ".");
+                        if(Squad.isPlayerInSquad((Player) pie.getRightClicked())) {
+                            if (commander == opposingCommanders[0]) {
+                                commander1Squad = Squad.getSquadPlayer((Player) pie.getRightClicked());
+                                commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You selected Squad " + (Battle.getSquadIndex(0, commander1Squad) + 1) + ".");
+                            } else if (commander == opposingCommanders[1]) {
+                                commander2Squad = Squad.getSquadPlayer((Player) pie.getRightClicked());
+                                commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You selected Squad " + (Battle.getSquadIndex(0, commander2Squad) + 1) + ".");
+                            }
+                        }
                     }
                 }
             }

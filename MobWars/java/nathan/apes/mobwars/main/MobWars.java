@@ -1,11 +1,13 @@
 package nathan.apes.mobwars.main;
 
+import nathan.apes.mobwars.command.GameCommand;
 import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
 import nathan.apes.mobwars.world.battle.InitBattleWorld;
 import nathan.apes.mobwars.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -19,6 +21,8 @@ public class MobWars extends JavaPlugin{
     //Scheduler object for convience use
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
 
+    public static FileConfiguration config;
+
     //Enable
     public void onEnable(){
 
@@ -29,6 +33,14 @@ public class MobWars extends JavaPlugin{
         new InitLobbyWorld();
         new InitBattleWorld();
         new BattleManager();
+
+        //Register Beta Stage Game Command (Creates a game environment for Beta purposes)
+        getCommand("mw").setExecutor(new GameCommand());
+
+        //Setup config for Beta Stage Uses (Allows the user to set a location used for Battle)
+        config = getConfig();
+        config.addDefault("battlelocationX", 0.0);
+        config.addDefault("battlelocationZ", 0.0);
     }
 
     //Disable

@@ -12,9 +12,6 @@ import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
 
 public class InitBattleWorld {
 
-    //World
-    public static World battlew;
-
     //Refrence to main
     private JavaPlugin mainClass = JavaPlugin.getProvidingPlugin(MobWars.class);
 
@@ -32,12 +29,7 @@ public class InitBattleWorld {
             //Log Creation
             mainClass.getLogger().info("Generated battle world...");
             Bukkit.broadcastMessage(loggingPrefix + ChatColor.AQUA + "Generated battle world. Games will be played here...");
-
-            //Mark world
-            battlew = w;
         }
-        battlew = Bukkit.getWorld("mw_BattleWorld");
-        //Change to config later...
     }
     
 }

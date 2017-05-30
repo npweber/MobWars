@@ -8,6 +8,7 @@ import nathan.apes.mobwars.util.*;
 
 import java.util.*;
 
+import nathan.apes.mobwars.world.battle.FindBattleground;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +30,9 @@ public class Battle{
     //Players in Battle
     private final ArrayList<Player> battlePlayers = new ArrayList<>();
 
+    //Commanders of the armies
+    public static Player[] opposingCommanders = new Player[2];
+
     //Squads in Battle
     public final ArrayList<Squad> squads = new ArrayList<>();
 
@@ -41,13 +45,13 @@ public class Battle{
     //Init Battle
     public Battle(ArrayList<Player> players, Vector grounds, int index){
 
-        //Set varibles
+        //Set variables
         battlePlayers.addAll(players);
         players.clear();
         battlearea = grounds;
         battleindex = index;
 
-        //Start processes
+        //Start Battle
         initBattle(battleindex, battlearea);
     }    
 
@@ -59,6 +63,7 @@ public class Battle{
             player -> {
                 scheduler.scheduleSyncDelayedTask(mainClass,
                     () -> {
+                        player.setInvulnerable(false);
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                         player.sendMessage(loggingPrefix + ChatColor.GREEN + "Game started!");
                     }
@@ -67,47 +72,54 @@ public class Battle{
         );
 
         //Assign commanders
-        ArrayList<Player> commanderChoosingList = new ArrayList<>();
-        commanderChoosingList.addAll(battlePlayers);
-        Player[] opposingCommanders = new Player[2];
-        opposingCommanders[0] = commanderChoosingList.get(new Random().nextInt(commanderChoosingList.size()));
-        commanderChoosingList.remove(opposingCommanders[0]);
-        opposingCommanders[1] = commanderChoosingList.get(new Random().nextInt(commanderChoosingList.size()));
+        ArrayList<Player> playerChooseList = new ArrayList<>();
+        playerChooseList.addAll(battlePlayers);
+        opposingCommanders[0] = playerChooseList.get(new Random().nextInt(playerChooseList.size()));
+        playerChooseList.remove(opposingCommanders[0]);
+        opposingCommanders[1] = playerChooseList.get(new Random().nextInt(playerChooseList.size()));
+        playerChooseList.remove(opposingCommanders[1]);
 
         //Assign commanding properties
-        opposingCommanders[0].setAllowFlight(true);
-        opposingCommanders[0].setFlying(true);
-        opposingCommanders[1].setAllowFlight(true);
-        opposingCommanders[1].setFlying(true);
+        opposingCommanders[0].setGameMode(GameMode.CREATIVE);
+        opposingCommanders[1].setGameMode(GameMode.CREATIVE);
         opposingCommanders[0].setInvulnerable(true);
         opposingCommanders[1].setInvulnerable(true);
 
         //Give commanding devices
-        //Commanders Bow (For actual shooting)
-        ItemStack commandersBow = new ItemStack(Material.BOW);
-        ItemMeta itemMeta1 = commandersBow.getItemMeta();
-        itemMeta1.setDisplayName("Commander's Bow");
-        commandersBow.setItemMeta(itemMeta1);
-
         //Commanders Baton (For direction to troops)
         ItemStack commandersBaton = new ItemStack(Material.BLAZE_ROD);
         ItemMeta itemMeta2 = commandersBaton.getItemMeta();
         itemMeta2.setDisplayName("Commander's Baton");
         commandersBaton.setItemMeta(itemMeta2);
 
+        //Commanders Picker (For Troop Selection)
+        ItemStack commandersPickStick = new ItemStack(Material.STICK);
+        ItemMeta itemMeta3 = commandersPickStick.getItemMeta();
+        itemMeta3.setDisplayName("Commander's Picker");
+        commandersPickStick.setItemMeta(itemMeta3);
+
+        //Commanders Retreat Option (Item that gives specific orders to retreat to the given cordinates)
+        ItemStack commandersRetreat = new ItemStack(Material.LEASH);
+        ItemMeta itemMeta4 = commandersRetreat.getItemMeta();
+        itemMeta4.setDisplayName("Commander's Retreat Option");
+        commandersRetreat.setItemMeta(itemMeta4);
+
         //Give devices
-        ItemStack[] commandingItems = new ItemStack[]{ commandersBow, commandersBaton };
+        ItemStack[] commandingItems = new ItemStack[]{ commandersBaton, commandersPickStick, commandersRetreat };
         opposingCommanders[0].getInventory().setContents(commandingItems);
+        opposingCommanders[0].getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
         opposingCommanders[1].getInventory().setContents(commandingItems);
+        opposingCommanders[1].getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
 
         //Assign Commander Variables
+        //Assign Spawn Location
         World bw = Bukkit.getWorld("mw_BattleWorld");
         Location[] commanderLocations = new Location[]{
-            new Location(bw, telearea.getX() + 5, bw.getHighestBlockYAt((int) telearea.getX() + 5, (int) telearea.getZ() + 5), telearea.getZ() - 100),
-            new Location(bw, telearea.getX() + 195, bw.getHighestBlockYAt((int) telearea.getX() + 195, (int) telearea.getZ() + 5), telearea.getZ() - 100)
+            new Location(bw, telearea.getX() + 5, bw.getHighestBlockYAt((int) telearea.getX() + 5, (int) telearea.getZ() - 50), telearea.getZ() - 50),
+            new Location(bw, telearea.getX() + 95, bw.getHighestBlockYAt((int) telearea.getX() + 95, (int) telearea.getZ() - 50), telearea.getZ() - 50)
         };
-        for(int i = 0; i < 1; i++)
-            commanderLocations[i].setYaw(270);
+        commanderLocations[0].setYaw(270);
+        commanderLocations[1].setYaw(90);
 
         //Teleport Opposing Commanders In
         opposingCommanders[0].teleport(commanderLocations[0]);
@@ -116,45 +128,48 @@ public class Battle{
         //Tell commanders a tip
         scheduler.scheduleSyncDelayedTask(mainClass,
             () -> {
-                opposingCommanders[0].sendMessage(loggingPrefix + ChatColor.AQUA + "Fly around and command your MobSquadrons!");
-                opposingCommanders[1].sendMessage(loggingPrefix + ChatColor.AQUA + "Fly around and command your MobSquadrons!");
+                opposingCommanders[0].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 1! Fly around and command your MobSquadrons to Victory!");
+                opposingCommanders[1].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 2! Fly around and command your MobSquadrons to Victory!");
             }
         , 20L);
 
         //Assign Squads
         ArrayList<Player>[] squadPlayerLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()};
-        battlePlayers.forEach(
+        playerChooseList.forEach(
             player -> {
-                if(!(player.equals(opposingCommanders[0]) || player.equals(opposingCommanders[1]))){
-                    if (battlePlayers.indexOf(player) < 4)
-                        squadPlayerLists[0].add(player);
-                    else if (battlePlayers.indexOf(player) > 4 && battlePlayers.indexOf(player) < 8)
-                        squadPlayerLists[1].add(player);
-                    else if (battlePlayers.indexOf(player) > 8 && battlePlayers.indexOf(player) < 12)
-                        squadPlayerLists[2].add(player);
-                    else if(battlePlayers.indexOf(player) > 12 && battlePlayers.indexOf(player) < 16)
-                        squadPlayerLists[3].add(player);
-                }
+                if(playerChooseList.indexOf(player) < 2)
+                    squadPlayerLists[0].add(player);
+                else if(playerChooseList.indexOf(player) > 1 && playerChooseList.indexOf(player) < 4)
+                    squadPlayerLists[1].add(player);
+                else if(playerChooseList.indexOf(player) > 3 && playerChooseList.indexOf(player) < 6)
+                    squadPlayerLists[2].add(player);
+                else
+                    squadPlayerLists[3].add(player);
             }
         );
 
         //Assign squad spawn location
         Location[] squadLocations = new Location[]{
-            new Location(squadPlayerLists[0].get(0).getWorld(), telearea.getX() + 100, (double) squadPlayerLists[0].get(0).getWorld().getHighestBlockYAt((int)telearea.getX() + 100,(int) telearea.getZ() - 5), telearea.getZ() - 5),
-            commanderLocations[0].add(0, 0, 4).subtract(2, 0, 0),
+            commanderLocations[0].add(0, 0, 4).subtract(1, 0, 0),
             commanderLocations[0].subtract(2, 0, 4),
-            commanderLocations[1].add(0, 0, 4).subtract(2, 0, 0),
-            commanderLocations[1].subtract(2, 0, 4)
+            commanderLocations[1].add(0, 0, 4).subtract(1, 0, 0),
+            commanderLocations[1].subtract(1, 0, 4)
         };
         for(int i = 0; i < squadLocations.length; i++)
-            squadLocations[i].setYaw(270);
+            if(i < 2)
+                squadLocations[i].setYaw(270);
+            else
+                squadLocations[i].setYaw(90);
 
         //Create Squads
-        for(int i = 0; i < squadPlayerLists.length; i++)
+        Player owner;
+        for(int i = 0; i < squadPlayerLists.length; i++) {
             if(i < 2)
-                squads.add(new Squad(opposingCommanders[0], squadPlayerLists[i], squadLocations[i], i));
+                owner = opposingCommanders[0];
             else
-                squads.add(new Squad(opposingCommanders[1], squadPlayerLists[i], squadLocations[i], i));
+                owner = opposingCommanders[1];
+            squads.add(new Squad(owner, squadPlayerLists[i], squadLocations[i], i));
+        }
 
         //Control Squads
         scheduler.scheduleSyncRepeatingTask(mainClass,
@@ -163,9 +178,27 @@ public class Battle{
                 for(int i = 0; i < squads.size(); i++)
                     Squad.setSquadLocation(Squad.getSquadPlayers(i).get(0).getLocation(), i);
             }
-        , 0L, 40L);
+        , 0L, 20L);
 
-        scheduler.scheduleSyncRepeatingTask(mainClass, () -> squads.forEach(squad -> Squad.squadPlayers.forEach(playerList -> playerList.forEach(player -> player.sendMessage(ChatColor.BLUE + "Your Squad's Health: " + Squad.getHealth(squads.indexOf(squad)) + "HP")))), 0L, 500L);
+        //Log the Squad's Health to the SquadPlayers
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> battlePlayers.forEach(player -> player.sendMessage(ChatColor.BLUE + "Your Squad's Health: " + Squad.getHealth(Battle.getSquadIndex(0, Squad.getSquadPlayer(player))) + "HP")), 0L, 1800L);
+
+        //Check for an army's defeat and declare it
+        scheduler.scheduleSyncRepeatingTask(mainClass,
+            () -> {
+                for(int i = 0; i < squads.size(); i++)
+                    if(Squad.getHealth(i) < 0.5){
+                        for(int i2 = 0; i2 < battlePlayers.size(); i2++) {
+                            battlePlayers.get(i2).setInvulnerable(false);
+                            battlePlayers.get(i2).setAllowFlight(false);
+                            if (Squad.getOwner(Battle.getSquadIndex(0, Squad.getSquadPlayer(battlePlayers.get(i2)))).equals(Battle.getBattleSquads(0).get(i)))
+                                battlePlayers.get(i2).kickPlayer("The battle is LOST.");
+                            else
+                                battlePlayers.get(i2).kickPlayer("You WON the Battle! Congrats!");
+                        }
+                    }
+            }
+        , 0L, 40L);
 
         //Register function events
         mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
@@ -174,19 +207,19 @@ public class Battle{
     }
 
     //Get the players in an instance
-    public static ArrayList<Player> getBattlePlayers(Battle b){ return b.battlePlayers; }
+    public static ArrayList<Player> getBattlePlayers(int index){ return BattleManager.getBattle(index).battlePlayers; }
 
     //Get the players in an instance
-    public static ArrayList<Squad> getBattleSquads(Battle b){ return b.squads; }
+    public static ArrayList<Squad> getBattleSquads(int index){ return BattleManager.getBattle(index).squads; }
 
-    public static int getSquadIndex(Player squadPlayer, Squad squad){ return getBattleSquads(getPlayerBattle(squadPlayer)).indexOf(squad); }
+    public static int getSquadIndex(int index, Squad squad){ return getBattleSquads(index).indexOf(squad); }
 
-    //Get which Battle the player l in
+    //Get which Battle the player is in
     public static Battle getPlayerBattle(Player p){
         Battle battle = currbattles.get(0);
             for(int i = 0; i < currbattles.size(); i++)
-                for(int i2 = 0; i2 < BattleManager.getBattle(i).battlePlayers.size(); i2++)
-                    if(BattleManager.getBattle(i).battlePlayers.contains(p))
+                for(int i2 = 0; i2 < getBattlePlayers(i).size(); i2++)
+                    if(getBattlePlayers(i).contains(p))
                         battle = BattleManager.getBattle(i);
         return battle;
     }
@@ -194,12 +227,10 @@ public class Battle{
     //Get if the player is in a Battle
     public static boolean isPlayerInBattle(Player p){
         boolean b = false;
-        for(int i = 0; i < currbattles.size(); i++){
-            if(Battle.getBattlePlayers(currbattles.get(i)).contains(p))
-                b = true;
-            else
-                b = false;
-        }
+        for(int i = 0; i < currbattles.size(); i++)
+            for(int i2 = 0; i2 < getBattlePlayers(i).size(); i2++)
+                if(getBattlePlayers(i).contains(p))
+                    b = true;
         return b;
     }
     

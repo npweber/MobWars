@@ -7,12 +7,11 @@ import nathan.apes.mobwars.event.lobby.*;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
+
 //InitLobbyWorld: System for LobbyWorld and its Environment
 
 public class InitLobbyWorld {
-
-    //World Field
-    public static World lobbyw;
 
     //MatchMaking Switch
     private static boolean matchMakingEnabled;
@@ -23,7 +22,7 @@ public class InitLobbyWorld {
     public InitLobbyWorld(){
 
         //Check for occurance of the Lobby world. If not, create it for the user.
-        if(new CheckWorld("mw_Lobby").hasw == false){
+        if(!(new CheckWorld("mw_Lobby").hasw)){
 
             //Create world
             WorldCreator wc = new WorldCreator("mw_Lobby");
@@ -34,20 +33,15 @@ public class InitLobbyWorld {
 
             //Log Creation
             mainClass.getLogger().info("Generated lobby world...");
-            Bukkit.broadcastMessage("[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] " + ChatColor.AQUA + "Generated lobby world. Build your spawn!");
-
-            //Mark world
-            lobbyw = w;
+            Bukkit.broadcastMessage(loggingPrefix + ChatColor.AQUA + "Generated lobby world. Build your spawn!");
         }
-        lobbyw = Bukkit.getWorld("mw_Lobby");
-        //Change to config value later...
 
+        //(Not needed for this stage in Development)
         //Register Lobby Events
-        mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
-        matchMakingEnabled = true;
+        //mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
+        //matchMakingEnabled = true;
     }
 
     public static boolean getMatchMakingStatus(){ return matchMakingEnabled; }
     public static void setMatchMakingEnabled(boolean b){ matchMakingEnabled = b; }
 }
-

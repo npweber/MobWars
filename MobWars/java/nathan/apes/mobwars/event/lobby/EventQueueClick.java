@@ -1,7 +1,5 @@
 package nathan.apes.mobwars.event.lobby;
 
-import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
-
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -23,7 +21,7 @@ public class EventQueueClick implements Listener{
         Player clker = pie.getPlayer();
 
         //Listen for click
-        if(clker.getWorld().equals(InitLobbyWorld.lobbyw)){
+        if(clker.getWorld().equals(Bukkit.getWorld("mw_Lobby"))){
             if(pie.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 if(pie.hasItem()){
                     if(pie.getItem().equals(new ItemStack(Material.NETHER_STAR))){
