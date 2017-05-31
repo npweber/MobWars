@@ -134,29 +134,23 @@ public class Battle{
         , 20L);
 
         //Assign Squads
-        ArrayList<Player>[] squadPlayerLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()};
+        ArrayList<Player>[] squadPlayerLists = new ArrayList[]{new ArrayList(), new ArrayList()};
         playerChooseList.forEach(
             player -> {
-                if(playerChooseList.indexOf(player) < 2)
+                if(playerChooseList.indexOf(player) < 4)
                     squadPlayerLists[0].add(player);
-                else if(playerChooseList.indexOf(player) > 1 && playerChooseList.indexOf(player) < 4)
-                    squadPlayerLists[1].add(player);
-                else if(playerChooseList.indexOf(player) > 3 && playerChooseList.indexOf(player) < 6)
-                    squadPlayerLists[2].add(player);
                 else
-                    squadPlayerLists[3].add(player);
+                    squadPlayerLists[1].add(player);
             }
         );
 
         //Assign squad spawn location
         Location[] squadLocations = new Location[]{
             commanderLocations[0].add(0, 0, 4).subtract(1, 0, 0),
-            commanderLocations[0].subtract(2, 0, 4),
             commanderLocations[1].add(0, 0, 4).subtract(1, 0, 0),
-            commanderLocations[1].subtract(1, 0, 4)
         };
         for(int i = 0; i < squadLocations.length; i++)
-            if(i < 2)
+            if(i < 1)
                 squadLocations[i].setYaw(270);
             else
                 squadLocations[i].setYaw(90);
@@ -164,7 +158,7 @@ public class Battle{
         //Create Squads
         Player owner;
         for(int i = 0; i < squadPlayerLists.length; i++) {
-            if(i < 2)
+            if(i < 1)
                 owner = opposingCommanders[0];
             else
                 owner = opposingCommanders[1];
@@ -183,6 +177,7 @@ public class Battle{
         //Log the Squad's Health to the SquadPlayers
         scheduler.scheduleSyncRepeatingTask(mainClass, () -> battlePlayers.forEach(player -> player.sendMessage(ChatColor.BLUE + "Your Squad's Health: " + Squad.getHealth(Battle.getSquadIndex(0, Squad.getSquadPlayer(player))) + "HP")), 0L, 1800L);
 
+        Squad[] defeatedSquads = new Squad[2];
         //Check for an army's defeat and declare it
         scheduler.scheduleSyncRepeatingTask(mainClass,
             () -> {
@@ -191,14 +186,18 @@ public class Battle{
                         for(int i2 = 0; i2 < battlePlayers.size(); i2++) {
                             battlePlayers.get(i2).setInvulnerable(false);
                             battlePlayers.get(i2).setAllowFlight(false);
-                            if (Squad.getOwner(Battle.getSquadIndex(0, Squad.getSquadPlayer(battlePlayers.get(i2)))).equals(Battle.getBattleSquads(0).get(i)))
-                                battlePlayers.get(i2).kickPlayer("The battle is LOST.");
+                            if(Squad.getSquadPlayers(i).contains(battlePlayers.get(i2)))
+                                battlePlayers.get(i2).kickPlayer("The Battle is LOST.");
                             else
-                                battlePlayers.get(i2).kickPlayer("You WON the Battle! Congrats!");
+                                battlePlayers.get(i2).kickPlayer("Your squad WON the Battle! Congrats!");
                         }
                     }
             }
         , 0L, 40L);
+
+        /*
+
+         */
 
         //Register function events
         mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
