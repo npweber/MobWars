@@ -2,6 +2,7 @@ package nathan.apes.mobwars.event.battle;
 
 import nathan.apes.mobwars.battle.Battle;
 import nathan.apes.mobwars.battle.Squad;
+import nathan.apes.mobwars.util.BattleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -33,18 +34,18 @@ public class EventCombat implements Listener{
                 Battle battle = Battle.getPlayerBattle(squadPlayer);
 
                 //Check for Squads in proximity to each other and engage them into battle if in proximity
-                battle.squads.forEach(
+                Battle.getSquads(BattleManager.getBattleIndex(battle)).forEach(
                         squad -> {
-                            if (!(Squad.getOwner(Battle.getSquadIndex(0, squadInvolved)).equals(Squad.getOwner(Battle.getSquadIndex(0, squad))))) {
-                                double distance = Math.abs(Squad.getSquadLocation(Battle.getSquadIndex(0, squad)).getX() - Squad.getSquadLocation(Battle.getSquadIndex(0, squadInvolved)).getX());
+                            if (!(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).equals(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad))))) {
+                                double distance = Math.abs(Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).getX() - Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).getX());
                                 if (distance < 4) {
-                                    if (Squad.getInForm(Battle.getSquadIndex(0, squadInvolved)) && (!(Squad.getRetreatStatus(Battle.getSquadIndex(0, squadInvolved))))) {
-                                        Squad.setInForm(false, Battle.getSquadIndex(0, squadInvolved));
-                                        Squad.getSquadPlayers(Battle.getSquadIndex(0, squadInvolved)).forEach(player -> player.sendMessage(ChatColor.RED + "Your squadron is engaged! FIGHT!"));
-                                        Squad.getOwner(Battle.getSquadIndex(0, squadInvolved)).sendMessage(ChatColor.RED + "Your squadron is engaged!");
-                                        Squad.setInForm(false, Battle.getSquadIndex(0, squad));
-                                        Squad.getSquadPlayers(Battle.getSquadIndex(0, squad)).forEach(player -> player.sendMessage(ChatColor.RED + "Your squadron is engaged! FIGHT!"));
-                                        Squad.getOwner(Battle.getSquadIndex(0, squad)).sendMessage(ChatColor.RED + "Your squadron is engaged!");
+                                    if (Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)) && (!(Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved))))) {
+                                        Squad.setInForm(false, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved));
+                                        Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).forEach(player -> player.sendMessage(ChatColor.RED + "Your squadron is engaged! FIGHT!"));
+                                        Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).sendMessage(ChatColor.RED + "Your squadron is engaged!");
+                                        Squad.setInForm(false, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad));
+                                        Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).forEach(player -> player.sendMessage(ChatColor.RED + "Your squadron is engaged! FIGHT!"));
+                                        Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).sendMessage(ChatColor.RED + "Your squadron is engaged!");
                                     }
                                 }
                             }
@@ -58,6 +59,7 @@ public class EventCombat implements Listener{
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent damageEvent) {
         if (damageEvent.getEntity().getType().equals(EntityType.PLAYER)){
+
             //Get players
             Player player = (Player) damageEvent.getEntity();
             Player otherPlayer = (Player) damageEvent.getDamager();
@@ -66,13 +68,14 @@ public class EventCombat implements Listener{
             if(Squad.isPlayerInSquad(player) && Squad.isPlayerInSquad(otherPlayer)){
                 Squad squad = Squad.getSquadPlayer(player);
                 Squad otherSquad = Squad.getSquadPlayer(otherPlayer);
-                if(!(Squad.getInForm(Battle.getSquadIndex(0, squad)) && Squad.getInForm(Battle.getSquadIndex(0, otherSquad))) && (!(Squad.getRetreatStatus(Battle.getSquadIndex(0, squad))))) {
-                    Squad.setHealth(Squad.getHealth(Battle.getSquadIndex(0, squad)) - 0.5, Battle.getSquadIndex(0, squad));
-                    Squad.getSquadPlayers(Battle.getSquadIndex(0, squad)).forEach(squadPlayer -> squadPlayer.sendMessage(ChatColor.RED + "Your squad was damaged! [" + Squad.getHealth(Battle.getSquadIndex(0, squad)) + "HP]"));
-                    Squad.getOwner(Battle.getSquadIndex(0, squad)).sendMessage(ChatColor.RED + "Your squad was damaged! [" + Squad.getHealth(Battle.getSquadIndex(0, squad)) + "HP]");
-                    Squad.getSquadPlayers(Battle.getSquadIndex(0, squad)).forEach(squadPlayer -> squadPlayer.playSound(squadPlayer.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0f, 1.0f));
-                    otherPlayer.sendMessage(ChatColor.BLUE + "You inflicted damage onto the enemy squad! [" + Squad.getHealth(Battle.getSquadIndex(0, squad)) + "HP]");
-                    Squad.getOwner(Battle.getSquadIndex(0, Squad.getSquadPlayer(otherPlayer)));
+                Battle battle = Squad.getSquadBattle(squad);
+                if(!(Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) && Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(otherSquad)), otherSquad))) && (!(Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad))))) {
+                    Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) - 0.5, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad));
+                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).forEach(squadPlayer -> squadPlayer.sendMessage(ChatColor.RED + "Your squad was damaged! [" + Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) + "HP]"));
+                    Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).sendMessage(ChatColor.RED + "Your squad was damaged! [" + Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) + "HP]");
+                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).forEach(squadPlayer -> squadPlayer.playSound(squadPlayer.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0f, 1.0f));
+                    otherPlayer.sendMessage(ChatColor.BLUE + "You inflicted damage onto the enemy squad! [" + Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) + "HP]");
+                    Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), Squad.getSquadPlayer(otherPlayer)));
                     otherPlayer.playSound(otherPlayer.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 1.0f, 1.0f);
                 }
                 damageEvent.setCancelled(true);

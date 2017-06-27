@@ -1,6 +1,10 @@
 package nathan.apes.mobwars.util;
 
 import nathan.apes.mobwars.battle.Battle;
+import nathan.apes.mobwars.battle.Squad;
+import nathan.apes.mobwars.event.battle.EventCombat;
+import nathan.apes.mobwars.event.battle.EventCommanderAction;
+import nathan.apes.mobwars.event.battle.EventPlayerMoveOut;
 import nathan.apes.mobwars.main.MobWars;
 
 import java.util.*;
@@ -17,35 +21,88 @@ import static nathan.apes.mobwars.main.MobWars.scheduler;
 
 public class BattleManager {
 
-    //Players assiociating with one battle
+    //Players associating with one battle
     public static ArrayList<Player> battlePlayers = new ArrayList<>();
 
     //All ongoing battles
-    public static ArrayList<Battle> currbattles = new ArrayList<>();
+    private static ArrayList<Battle> currbattles = new ArrayList<>();
 
-    public static int battleind = -1;
-    //Remove on overhaul
+    //Battle Index Counter
+    private int battleind = -1;
 
     //Main reference
     private final JavaPlugin mainClass = JavaPlugin.getProvidingPlugin(MobWars.class);
 
-    //Initialize PlayerMatchMaking
+    //Initialize PlayerMatchMaking and Functions
     public BattleManager(){
+
+        //Init MatchMaking
         scheduler.scheduleSyncRepeatingTask(mainClass, () -> matchMaking(), 0L, 40L);
+
+        //Update Movements
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> currbattles.forEach(battle -> Battle.getSquads(currbattles.indexOf(battle)).forEach(squad -> { squad.move(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); Squad.setSquadLocation(Squad.getSquadPlayers(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)).get(0).getLocation(), currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); })), 0L, 20L);
+
+        //Update Game Ending
+        scheduler.scheduleSyncRepeatingTask(mainClass,
+            () -> {
+                currbattles.forEach(battle -> Battle.getSquads(currbattles.indexOf(battle)).forEach(
+                    squad -> {
+                        if(Squad.getHealth(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)) < 0.5) {
+                            Battle.getBattlePlayers(currbattles.indexOf(battle)).forEach(
+                                player -> {
+                                    player.setAllowFlight(false);
+                                    player.setInvulnerable(false);
+                                    if(Squad.isPlayerInSquad(player))
+                                        if(Squad.getSquadPlayer(player).equals(squad))
+                                            player.kickPlayer("The Battle is LOST.");
+                                        else
+                                            player.kickPlayer("Your squad WON the Battle! Congrats!");
+                                    else
+                                        if (player.equals(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad))))
+                                            player.kickPlayer("The Battle is LOST.");
+                                        else
+                                            player.kickPlayer("Your squad WON the Battle! Congrats!");
+                                }
+                            );
+                            BattleManager.getBattles().remove(battle);
+                        }
+                    }
+                ));
+            }
+        , 0L, 40L);
+
+        //Init Core Game Functions
+        mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
+        mainClass.getServer().getPluginManager().registerEvents(new EventCommanderAction(), mainClass);
+        mainClass.getServer().getPluginManager().registerEvents(new EventCombat(), mainClass);
     }
 
     //Matchmake players in the BattlePlayerList
     private void matchMaking(){
-        if(battlePlayers.size() == 10){
+        if(battlePlayers.size() == 4){
 
+            //Control battle index
             battleind++;
 
+            //Log MatchMake
             battlePlayers.forEach(player -> player.sendMessage(loggingPrefix + ChatColor.GOLD + "You have a game! It's now time for the battle!"));
-            currbattles.add(new Battle(battlePlayers, new FindBattleground().findBattleground(), 0));
+
+            //Misc Init
+            EventCommanderAction.commander1Squad.add(null);
+            EventCommanderAction.commander2Squad.add(null);
+
+            //Start Battle
+            currbattles.add(new Battle(battlePlayers, new FindBattleground().findBattleground(), battleind));
         }
     }
 
+    //Get the current Battles
+    public static ArrayList<Battle> getBattles(){ return currbattles; }
+
     //Gets a battle out of the array
     public static Battle getBattle(int index){ return currbattles.get(index); }
+
+    //Get the Battle Index
+    public static int getBattleIndex(Battle b){ return currbattles.indexOf(b); }
 
 }

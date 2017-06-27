@@ -38,10 +38,11 @@ public class InitLobbyWorld {
 
         //(Not needed for this stage in Development)
         //Register Lobby Events
-        //mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
-        //matchMakingEnabled = true;
+        mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
+        matchMakingEnabled = true;
     }
 
+    //Get & Set MatchmakingEnabled
     public static boolean getMatchMakingStatus(){ return matchMakingEnabled; }
     public static void setMatchMakingEnabled(boolean b){ matchMakingEnabled = b; }
 }

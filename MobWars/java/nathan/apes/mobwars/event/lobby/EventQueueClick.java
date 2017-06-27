@@ -10,7 +10,7 @@ import org.bukkit.inventory.*;
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
 import static nathan.apes.mobwars.util.BattleManager.battlePlayers;
 
-//EventQueueClick: Lobby PlayerMatchMaking Event
+//EventQueueClick: Lobby PlayerMatchMaking Event - Not currently in use
 
 public class EventQueueClick implements Listener{
 

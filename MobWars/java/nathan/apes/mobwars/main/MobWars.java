@@ -19,8 +19,9 @@ public class MobWars extends JavaPlugin{
     public static final String loggingPrefix = "[" + ChatColor.RED + "MobWars" + ChatColor.RESET + "] ";
 
     //Scheduler object for convience use
-    public static BukkitScheduler scheduler = Bukkit.getScheduler();
+    public static final BukkitScheduler scheduler = Bukkit.getScheduler();
 
+    //Config object
     public static FileConfiguration config;
 
     //Enable
@@ -41,6 +42,8 @@ public class MobWars extends JavaPlugin{
         config = getConfig();
         config.addDefault("battlelocationX", 0.0);
         config.addDefault("battlelocationZ", 0.0);
+        config.options().copyDefaults(true);
+        saveConfig();
     }
 
     //Disable

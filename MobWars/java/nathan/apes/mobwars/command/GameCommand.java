@@ -17,7 +17,7 @@ public class GameCommand implements CommandExecutor{
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("mw")) {
             if (sender.hasPermission("mobwars.game")){
-                if(Bukkit.getOnlinePlayers().size() == 10) {
+                if(Bukkit.getOnlinePlayers().size() == 4) {
                     //Add players to queue, starting game
                     battlePlayers.addAll(Bukkit.getOnlinePlayers());
                 }

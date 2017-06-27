@@ -20,15 +20,13 @@ public class EventPlayerMoveOut implements Listener{
         Player pl = pme.getPlayer();
 
         //Manage all Battles triggering the event
-        for(int i = 0; i < BattleManager.currbattles.size(); i++){
-
-            Battle b = BattleManager.getBattle(i);
+        for(int i = 0; i < BattleManager.getBattles().size(); i++){
 
             //Check for if in battle
-            if(Battle.getBattlePlayers(0).contains(pl)) {
+            if(Battle.getBattlePlayers(i).contains(pl)) {
 
-                int x = (int) b.battlearea.getX();
-                int z = (int) b.battlearea.getZ();
+                int x = (int) Battle.getBattleArea(i).getX();
+                int z = (int) Battle.getBattleArea(i).getZ();
                 Location ploc = pl.getLocation();
                 double plx = ploc.getX();
                 double plz = ploc.getZ();
@@ -49,7 +47,7 @@ public class EventPlayerMoveOut implements Listener{
                     Squad squad = Squad.getSquadPlayer(pl);
 
                     //Check if they are in formation
-                    if (Squad.getInForm(Battle.getSquadIndex(0, squad)))
+                    if (Squad.getInForm(i, Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)))
                         //If so, restrain to position
                         pl.teleport(ploc);
                 }
