@@ -1,6 +1,6 @@
 name: MobWars
 description: The minigame plugin where wars are fought between mobs!
-version: 1.8b
+version: 1.8.1b
 author: NathanApes
 
 main: nathan.apes.mobwars.main.MobWars

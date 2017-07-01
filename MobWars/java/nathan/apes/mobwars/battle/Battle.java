@@ -130,34 +130,49 @@ public class Battle{
         , 20L);
 
         //Assign Squads
-        ArrayList<Player>[] squadPlayerLists = new ArrayList[]{new ArrayList(), new ArrayList()};
+        ArrayList<Player>[] squadPlayerLists = new ArrayList[]{new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()};
         playerChooseList.forEach(
             player -> {
-                if(playerChooseList.indexOf(player) < 1)
+                if(playerChooseList.indexOf(player) < 2)
                     squadPlayerLists[0].add(player);
-                if(playerChooseList.indexOf(player) > 0 && playerChooseList.indexOf(player) < 2)
+                if(playerChooseList.indexOf(player) > 1 && playerChooseList.indexOf(player) < 4)
                     squadPlayerLists[1].add(player);
+                if(playerChooseList.indexOf(player) > 3 && playerChooseList.indexOf(player) < 6)
+                    squadPlayerLists[2].add(player);
+                if(playerChooseList.indexOf(player) > 5 && playerChooseList.indexOf(player) < 8)
+                    squadPlayerLists[3].add(player);
             }
         );
         //Assign squad spawn location
         Location[] squadLocations = new Location[]{
-            commanderLocations[0].add(0, 0, 4).subtract(1, 0, 0),
-            commanderLocations[1].add(0, 0, 4).subtract(1, 0, 0),
+            commanderLocations[0].subtract(1, 0, 0),
+            commanderLocations[0].subtract(1, 0, 0),
+            commanderLocations[1].add(1, 0, 0),
+            commanderLocations[1].add(1, 0, 0)
         };
-        for(int i = 0; i < squadLocations.length; i++)
-            if(i < 1)
+        squadLocations[0].subtract(0, 0, 4);
+        squadLocations[1].add(0, 0, 4);
+        squadLocations[2].subtract(0, 0, 4);
+        squadLocations[3].add(0, 0, 4);
+        for(int i = 0; i < squadLocations.length; i++) {
+            if (i < 2)
                 squadLocations[i].setYaw(270);
             else
                 squadLocations[i].setYaw(90);
+        }
 
         //Create Squads
         Player owner;
+        int armySquadIndex;
         for(int i = 0; i < squadPlayerLists.length; i++) {
-            if(i < 1)
+            if(i < 2) {
                 owner = opposingCommanders.get(index)[0];
-            else
+                armySquadIndex = 0;
+            } else {
                 owner = opposingCommanders.get(index)[1];
-            squads.get(index).add(new Squad(owner, squadPlayerLists[i], squadLocations[i], index, i));
+                armySquadIndex = 1;
+            }
+            squads.get(index).add(new Squad(owner, squadPlayerLists[i], squadLocations[i], index, armySquadIndex, i));
         }
     }
 
@@ -186,14 +201,18 @@ public class Battle{
 
     //Get certain battle's players
     public static ArrayList<Player> getBattlePlayers(int index){ return Battle.battlePlayers.get(index); }
+    public static ArrayList<ArrayList<Player>> getAllBattlePlayers(){ return Battle.battlePlayers; }
 
     //Get certain battle's commanders
     public static Player[] getCommanders(int index){ return opposingCommanders.get(index); }
+    public static ArrayList<Player[]> getAllCommanders(){ return opposingCommanders; }
 
     //Get certain battle's squads
     public static ArrayList<Squad> getSquads(int index){ return squads.get(index); }
+    public static ArrayList<ArrayList<Squad>> getAllSquads(){ return squads; }
 
     //Get certain battle's combat field
     public static Vector getBattleArea(int index){ return battlearea.get(index); }
+    public static ArrayList<Vector> getBattleAreas(){ return battlearea; }
 
 }

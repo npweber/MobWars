@@ -45,31 +45,60 @@ public class BattleManager {
         //Update Game Ending
         scheduler.scheduleSyncRepeatingTask(mainClass,
             () -> {
-                currbattles.forEach(battle -> Battle.getSquads(currbattles.indexOf(battle)).forEach(
+                currbattles.forEach(battle -> Battle.getSquads(BattleManager.getBattleIndex(battle)).forEach(
                     squad -> {
-                        if(Squad.getHealth(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)) < 0.5) {
-                            Battle.getBattlePlayers(currbattles.indexOf(battle)).forEach(
-                                player -> {
-                                    player.setAllowFlight(false);
-                                    player.setInvulnerable(false);
-                                    if(Squad.isPlayerInSquad(player))
-                                        if(Squad.getSquadPlayer(player).equals(squad))
-                                            player.kickPlayer("The Battle is LOST.");
-                                        else
-                                            player.kickPlayer("Your squad WON the Battle! Congrats!");
-                                    else
-                                        if (player.equals(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad))))
-                                            player.kickPlayer("The Battle is LOST.");
-                                        else
-                                            player.kickPlayer("Your squad WON the Battle! Congrats!");
+                        if(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)) < 0.5) {
+                            if(!(Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)))) {
+                                Battle.getBattlePlayers(BattleManager.getBattleIndex(battle)).forEach(player -> player.sendMessage(loggingPrefix + ChatColor.RED + "A Squad of Army " + ChatColor.GOLD + (Squad.getArmyIndex(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)) + 1) + ChatColor.RED + " has fallen!"));
+                                Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)).forEach(player -> player.sendMessage(ChatColor.RED + " Your squad has died in action!"));
+                            }
+                            Squad.setInForm(true, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad));
+                            Squad.setDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad), true);
+                            if((Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(0).equals(Boolean.TRUE) && Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(1).equals(Boolean.TRUE))
+                            || (Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(2).equals(Boolean.TRUE) && Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(3).equals(Boolean.TRUE))) {
+                                Battle.getBattlePlayers(BattleManager.getBattleIndex(battle)).forEach(player -> { player.setAllowFlight(false); player.setInvulnerable(false); });
+                                String[] kickMessages = new String[]{ "The Battle is LOST.", "You WON the Battle!" };
+                                if(Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(0).equals(Boolean.TRUE) && Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(1).equals(Boolean.TRUE)) {
+                                    Battle.getCommanders(BattleManager.getBattleIndex(battle))[0].kickPlayer(kickMessages[0]);
+                                    Battle.getCommanders(BattleManager.getBattleIndex(battle))[1].kickPlayer(kickMessages[1]);
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 0).forEach(player -> player.kickPlayer(kickMessages[0]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 1).forEach(player -> player.kickPlayer(kickMessages[0]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 2).forEach(player -> player.kickPlayer(kickMessages[1]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 3).forEach(player -> player.kickPlayer(kickMessages[1]));
                                 }
-                            );
-                            BattleManager.getBattles().remove(battle);
+                                if(Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(2).equals(Boolean.TRUE) && Squad.getDisableds(BattleManager.getBattleIndex(battle)).get(3).equals(Boolean.TRUE)) {
+                                    Battle.getCommanders(BattleManager.getBattleIndex(battle))[0].kickPlayer(kickMessages[1]);
+                                    Battle.getCommanders(BattleManager.getBattleIndex(battle))[1].kickPlayer(kickMessages[0]);
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 0).forEach(player -> player.kickPlayer(kickMessages[1]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 1).forEach(player -> player.kickPlayer(kickMessages[1]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 2).forEach(player -> player.kickPlayer(kickMessages[0]));
+                                    Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), 3).forEach(player -> player.kickPlayer(kickMessages[0]));
+                                }
+                            }
                         }
                     }
                 ));
             }
         , 0L, 40L);
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> currbattles.forEach(
+            battle -> {
+                if(!(Bukkit.getOnlinePlayers().containsAll(Battle.getBattlePlayers(BattleManager.getBattleIndex(battle))))) {
+                    Battle.getAllSquads().remove(BattleManager.getBattleIndex(battle));
+                    Battle.getAllBattlePlayers().remove(BattleManager.getBattleIndex(battle));
+                    Battle.getBattleAreas().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllArmyIndex().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllDestination().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllDisabled().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllForms().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllHealth().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllOwner().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllSquadLocation().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllRetreat().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllSquadPlayer().remove(BattleManager.getBattleIndex(battle));
+                    BattleManager.getBattles().remove(battle);
+                }
+            }
+        ), 0L, 40L);
 
         //Init Core Game Functions
         mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);
@@ -79,7 +108,7 @@ public class BattleManager {
 
     //Matchmake players in the BattlePlayerList
     private void matchMaking(){
-        if(battlePlayers.size() == 4){
+        if(battlePlayers.size() == 10){
 
             //Control battle index
             battleind++;
