@@ -32,11 +32,11 @@ public class EventPlayerMoveOut implements Listener{
                 double plz = ploc.getZ();
 
                 //Send back if trying to go out
-                if ((plx < x) || (plx > (x + 200))) {
+                if ((plx < x) || (plx > (x + 100))) {
                     pl.teleport(ploc);
                     pl.sendMessage(ChatColor.RED + "Don't leave the battle!");
                 }
-                if ((plz < (z - 200)) || (plz > z)) {
+                if ((plz < (z - 100)) || (plz > z)) {
                     pl.teleport(ploc);
                     pl.sendMessage(ChatColor.RED + "Don't leave the battle!");
                 }
