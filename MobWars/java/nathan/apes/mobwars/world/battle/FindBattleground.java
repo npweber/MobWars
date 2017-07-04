@@ -2,15 +2,13 @@ package nathan.apes.mobwars.world.battle;
 
 import java.util.*;
 
-import nathan.apes.mobwars.main.MobWars;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import static nathan.apes.mobwars.main.MobWars.config;
+import static nathan.apes.mobwars.main.MobWars.xBndDatabase;
 
 //FindBattleground: Utility that finds an open Battleground for each Match
 
@@ -19,65 +17,78 @@ public class FindBattleground{
     //Battlegrounds to be set
     private Vector battlebnds;
 
-    //Previously taken Battlegrounds not to be slain on
-    private final ArrayList<Vector> areas = new ArrayList<>();
+    private ArrayList<Integer> areas;
 
     //Controls whether the battleground is suitable for battle
-    public static boolean isSuitable = true;
+    private boolean isSuitable = true;
 
     public Vector findBattleground(){
-        //(Not able to be in this version of the game. For Beta purposes, the user will set the battlegrounds.)
-        /*
+
         //Choose a random area
         int xBnd = new Random().nextInt(20000000);
         int zBnd = xBnd + 100;
-        double y = InitBattleWorld.battlew.getHighestBlockAt(xBnd, zBnd).getY();
+        double y = Bukkit.getWorld("mw_BattleWorld").getHighestBlockAt(xBnd, zBnd).getY();
         battlebnds = new Vector((double) xBnd, y, (double) zBnd);
 
-        //(Not needed for this stage in Development)
-        //areas.add(battlebnds);
-        //Change to config fields...
+        //Control suitability
+        isSuitable = true;
 
         //Check if the area has been a previous battleground
-        if(areas.size() > 1) {
-            for (int i = 1; i < areas.size(); i++) {
-                double x = areas.get(i).getX();
-                double z = areas.get(i).getZ();
-
-                double xcurr = battlebnds.getX();
-                double zcurr = battlebnds.getZ();
-
-                //Choose another area if it has indeed served other opponents
-                if ((xcurr >= x && xcurr <= x + 600.0) && (zcurr >= z && zcurr <= z + 600.0))
-                    findBattleground();
-            }
+        areas = new ArrayList<>();
+        String[] xValues = {};
+        if(!xBndDatabase.getString("takenbattlegroundXValues").isEmpty())
+            xValues = xBndDatabase.getString("takenbattlegroundXValues").split(",");
+        for(int i = 0; i < xValues.length; i++)
+            areas.add(Integer.parseInt(xValues[i]));
+        for (int i = 0; i < areas.size(); i++) {
+            if ((xBnd < areas.get(i) + 400 && xBnd > areas.get(i) - 200))
+                isSuitable = false;
         }
 
         //Choose another area if it is not a suitable battleground
         //Expand to not choose ANY non-suitable battlegrounds
         World bw = Bukkit.getWorld("mw_BattleWorld");
         Location searchLocation = battlebnds.toLocation(bw);
-        for(int i = 0; i < 100; i++) {
-            for (int i2 = 0; i2 < 100; i2++) {
-                searchLocation = battlebnds.toLocation(bw).add(xBnd + i, bw.getHighestBlockYAt(xBnd + i, (zBnd - 100) + i2),(zBnd - 100) + i2).subtract(0, 1, 0);
-                if (!(searchLocation.getBlock().getBiome().equals(Biome.DESERT)
-                        || searchLocation.getBlock().getBiome().equals(Biome.EXTREME_HILLS)
-                        || searchLocation.getBlock().getBiome().equals(Biome.ICE_FLATS)
-                        || searchLocation.getBlock().getBiome().equals(Biome.MESA)
-                        || searchLocation.getBlock().getBiome().equals(Biome.PLAINS)
-                        || searchLocation.getBlock().getBiome().equals(Biome.SAVANNA))
-                        || searchLocation.getBlock().isLiquid()) {
-                    isSuitable = false;
-                    break;
-                }
+        int[] checkpointMarkerX = {0, 50, 100, 0, 50, 100, 0, 50, 100};
+        int[] checkpointMarkerZ = {0, 0, 0, 50, 50, 50, 100, 100, 100};
+        for(int i = 0; i < 9; i++)
+            searchLocation = searchLocation.add(checkpointMarkerX[i], 0, checkpointMarkerZ[i]);
+            if (!((searchLocation.getBlock().getBiome().equals(Biome.DESERT)
+                    || searchLocation.getBlock().getBiome().equals(Biome.DESERT_HILLS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.EXTREME_HILLS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.EXTREME_HILLS_WITH_TREES)
+                    || searchLocation.getBlock().getBiome().equals(Biome.ICE_FLATS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.ICE_MOUNTAINS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.SMALLER_EXTREME_HILLS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MESA_CLEAR_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MESA_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_DESERT)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_EXTREME_HILLS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_EXTREME_HILLS_WITH_TREES)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_ICE_FLATS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_MESA)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_SAVANNA)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_SAVANNA_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.SAVANNA_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_PLAINS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_MESA_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MUTATED_MESA_CLEAR_ROCK)
+                    || searchLocation.getBlock().getBiome().equals(Biome.MESA)
+                    || searchLocation.getBlock().getBiome().equals(Biome.PLAINS)
+                    || searchLocation.getBlock().getBiome().equals(Biome.SAVANNA)))) {
+                isSuitable = false;
             }
-        }
+
+        //Re-Choose if the battleground is indeed not for use
         if(!(isSuitable))
             findBattleground();
-        */
 
-        World bw = Bukkit.getWorld("mw_BattleWorld");
-        battlebnds = new Vector(config.getDouble("battlelocationX"), bw.getHighestBlockYAt((int)config.getDouble("battlelocationX"), (int) config.getDouble("battlelocationZ")), config.getDouble("battlelocationZ"));
+        //Save the taken location to the database
+        if(xBndDatabase.getString("takenbattlegroundXValues").equalsIgnoreCase(""))
+            xBndDatabase.set("takenbattlegroundXValues", xBnd);
+        else
+            xBndDatabase.set("takenbattlegroundXValues", xBndDatabase.getString("takenbattlegroundXValues") + "," + xBnd);
+
         return battlebnds;
     }
 }

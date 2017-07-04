@@ -62,9 +62,14 @@ public class EventCombat implements Listener{
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent damageEvent) {
 
+        Player player = null;
+        Player otherPlayer = null;
+
         //Get players
-        Player player = (Player) damageEvent.getEntity();
-        Player otherPlayer = (Player) damageEvent.getDamager();
+        if(damageEvent.getDamager().getType().equals(EntityType.PLAYER) && damageEvent.getEntity().getType().equals(EntityType.PLAYER)) {
+            player = (Player) damageEvent.getEntity();
+            otherPlayer = (Player) damageEvent.getDamager();
+        }
 
         if(player.getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
             if (damageEvent.getEntity().getType().equals(EntityType.PLAYER)) {
