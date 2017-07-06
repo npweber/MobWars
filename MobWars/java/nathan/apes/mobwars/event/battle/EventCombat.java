@@ -37,11 +37,11 @@ public class EventCombat implements Listener{
                 //Check for Squads in proximity to each other and engage them into battle if in proximity
                 Battle.getSquads(BattleManager.getBattleIndex(battle)).forEach(
                     squad -> {
+                        //double distance = Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squadInvolved)).distance(Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)));
                         if((!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)))) && (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squadInvolved))))) {
                             if (!(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).equals(Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad))))) {
-                                double distance = Math.abs(Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)).getX() - Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).getX());
-                                if (distance < 4) {
-                                    if (Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)) && (!(Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved))))) {
+                                if (Squad.getInForm(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)) && (!(Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved))))) {
+                                    if (Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squadInvolved)).toVector().isInSphere(Squad.getSquadLocation(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)).toVector(), 4)) {
                                         Squad.setInForm(false, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved));
                                         Squad.getSquadPlayers(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).forEach(player -> player.sendMessage(ChatColor.RED + "Your squadron is engaged! FIGHT!"));
                                         Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squadInvolved)), squadInvolved)).sendMessage(ChatColor.RED + "Your squadron is engaged!");
@@ -71,8 +71,8 @@ public class EventCombat implements Listener{
             otherPlayer = (Player) damageEvent.getDamager();
         }
 
-        if(player.getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
-            if (damageEvent.getEntity().getType().equals(EntityType.PLAYER)) {
+        if (damageEvent.getEntity().getType().equals(EntityType.PLAYER)) {
+            if(player.getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
                 //If the player is damaged in battle, God-mode the player and reduce Squad Health
                 if (Squad.isPlayerInSquad(player) && Squad.isPlayerInSquad(otherPlayer)) {
                     Squad squad = Squad.getSquadPlayer(player);
