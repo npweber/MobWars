@@ -135,8 +135,8 @@ public class Squad {
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
                         getSquadPlayers(battleIndex, squadIndex).get(i).teleport(newLocation);
-                        xCurrStep.get(battleIndex).set(squadIndex, xCurrStep.get(battleIndex).get(squadIndex) + 1);
                     }
+                    xCurrStep.get(battleIndex).set(squadIndex, xCurrStep.get(battleIndex).get(squadIndex) + 1);
                 }
                 if (zCurrStep.get(battleIndex).get(squadIndex) < zSteps.get(battleIndex).get(squadIndex)) {
                     for (int i = 0; i < getSquadPlayers(battleIndex, squadIndex).size(); i++) {
@@ -151,8 +151,8 @@ public class Squad {
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
                         getSquadPlayers(battleIndex, squadIndex).get(i).teleport(newLocation);
-                        zCurrStep.get(battleIndex).set(squadIndex, zCurrStep.get(battleIndex).get(squadIndex) + 1);
                     }
+                    zCurrStep.get(battleIndex).set(squadIndex, zCurrStep.get(battleIndex).get(squadIndex) + 1);
                 }
                 squadLocation.get(battleIndex).set(squadIndex, squadPlayers.get(battleIndex).get(squadIndex).get(0).getLocation());
                 if (xCurrStep.get(battleIndex).get(squadIndex).equals(xSteps.get(battleIndex).get(squadIndex)) && zCurrStep.get(battleIndex).get(squadIndex).equals(zSteps.get(battleIndex).get(squadIndex))) {
