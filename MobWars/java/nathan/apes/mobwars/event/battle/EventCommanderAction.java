@@ -145,8 +145,8 @@ public class EventCommanderAction implements Listener {
         Player commander = pie.getPlayer();
 
         //Specify conditions
-        if(commander.getLocation().getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
-            if (pie.getRightClicked().getType().equals(EntityType.PLAYER)) {
+        if (pie.getRightClicked().getType().equals(EntityType.PLAYER)) {
+            if(commander.getLocation().getWorld().equals(Bukkit.getWorld("mw_BattleWorld"))) {
                 if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0] || commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1]) {
                     //If the item is the commanders get his action
                     if (pie.getHand().equals(EquipmentSlot.HAND) && pie.getPlayer().getInventory().getHeldItemSlot() == 1) {
