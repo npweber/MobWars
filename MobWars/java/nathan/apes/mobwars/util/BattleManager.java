@@ -40,7 +40,7 @@ public class BattleManager {
         scheduler.scheduleSyncRepeatingTask(mainClass, () -> matchMaking(), 0L, 40L);
 
         //Update Movements
-        scheduler.scheduleSyncRepeatingTask(mainClass, () -> currbattles.forEach(battle -> Battle.getSquads(currbattles.indexOf(battle)).forEach(squad -> { squad.move(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); Squad.setSquadLocation(Squad.getSquadPlayers(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)).get(0).getLocation(), currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); })), 0L, 20L);
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> currbattles.forEach(battle -> Battle.getSquads(currbattles.indexOf(battle)).forEach(squad -> { squad.move(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); Squad.setSquadLocation(Squad.getSquadPlayers(currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)).get(0).getLocation(), currbattles.indexOf(battle), Battle.getSquadIndex(currbattles.indexOf(battle), squad)); })), 0L, 12L);
 
         //Update Game Ending
         scheduler.scheduleSyncRepeatingTask(mainClass,
