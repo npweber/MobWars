@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
-//EventPlayerMoveOut: Restrains the player to the Battegrounds & If they are in a squad they are restrained to a squad
+//EventPlayerMoveOut: Restrains the Player in the Battle Setting
 
 public class EventPlayerMoveOut implements Listener{
 
@@ -53,5 +53,17 @@ public class EventPlayerMoveOut implements Listener{
                 }
             }
         }
+    }
+
+    //Prevent players from removing their devices
+    @EventHandler
+    public void onAttemptDropDevice(PlayerDropItemEvent die){
+
+        //Get player
+        Player dropper = die.getPlayer();
+
+        //Prevent
+        if(Battle.isPlayerInBattle(dropper))
+            die.setCancelled(true);
     }
 }
