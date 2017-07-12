@@ -96,6 +96,7 @@ public class BattleManager {
                     Squad.getAllRetreat().remove(BattleManager.getBattleIndex(battle));
                     Squad.getAllSquadPlayer().remove(BattleManager.getBattleIndex(battle));
                     BattleManager.getBattles().remove(battle);
+                    battleind--;
                 }
             }
         ), 0L, 40L);
