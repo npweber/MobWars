@@ -36,10 +36,9 @@ public class InitLobbyWorld {
             Bukkit.broadcastMessage(loggingPrefix + ChatColor.AQUA + "Generated lobby world. Build your spawn!");
         }
 
-        //(Not needed for this stage in Development)
         //Register Lobby Events
-        //mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
-        //matchMakingEnabled = true;
+        mainClass.getServer().getPluginManager().registerEvents(new EventQueueClick(), mainClass);
+        matchMakingEnabled = true;
     }
 
     //Get & Set MatchmakingEnabled

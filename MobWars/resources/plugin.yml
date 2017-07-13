@@ -1,17 +1,21 @@
 name: MobWars
 description: The minigame plugin where wars are fought between mobs!
-version: 1.9.4b
+version: 1.0
 author: NathanApes
 
 main: nathan.apes.mobwars.main.MobWars
 
 commands:
   mw:
-    description: Starts a game of MobWars. Should only be used during this Beta of the game.
+    description: Starts a game of MobWars, manually.
     usage: /mw
+    permission: mobwars.game
+  mwdisable:
+    description: Disables all games of MobWars
+    usage: /mwdisable
     permission: mobwars.game
 
 permissions:
   mobwars.game:
-    description: Gives access to starting a game.
+    description: Gives access to game control.
     default: op

@@ -1,13 +1,16 @@
 package nathan.apes.mobwars.main;
 
+import nathan.apes.mobwars.battle.Battle;
+import nathan.apes.mobwars.battle.Squad;
 import nathan.apes.mobwars.command.GameCommand;
-import nathan.apes.mobwars.world.battle.FindBattleground;
+import nathan.apes.mobwars.command.GameStopCommand;
 import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
 import nathan.apes.mobwars.world.battle.InitBattleWorld;
 import nathan.apes.mobwars.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,13 +28,20 @@ public class MobWars extends JavaPlugin{
     //Scheduler object for convience use
     public static final BukkitScheduler scheduler = Bukkit.getScheduler();
 
+    //BattleWorld object for convience use
+    public static World bw = Bukkit.getWorld("mw_BattleWorld");
+
     //Config objects
     public static FileConfiguration config;
     public static FileConfiguration xBndDatabase;
     private File configdatabaseFile;
 
+    //Handles the Game Stopping System
+    public static boolean disabling = false;
+    public static boolean disabled = false;
+
     //Enable
-    public void onEnable(){
+    public void onEnable() {
 
         //Log Enable
         this.getLogger().info("Enabling MobWars...");
@@ -41,10 +51,14 @@ public class MobWars extends JavaPlugin{
         new InitBattleWorld();
         new BattleManager();
 
-        //Register Beta Stage Game Command (Creates a game environment for Beta purposes)
+        //Register Game Command (Creates a Game)
         getCommand("mw").setExecutor(new GameCommand());
+        getCommand("mwdisable").setExecutor(new GameStopCommand());
 
-        //Setup config (Unused currently)
+        //Register World Variable
+        bw = Bukkit.getWorld("mw_BattleWorld");
+
+        //Setup config
         config = getConfig();
         config.options().copyDefaults(true);
         saveConfig();
@@ -54,10 +68,16 @@ public class MobWars extends JavaPlugin{
         xBndDatabase = YamlConfiguration.loadConfiguration(configdatabaseFile);
         xBndDatabase.options().copyDefaults(true);
         try {
-            Reader inputReader = new InputStreamReader(this.getResource("battlegroundDatabase.yml"), "UTF8");
+            Reader inputReader = new InputStreamReader(getResource("battlegroundDatabase.yml"), "UTF8");
             YamlConfiguration defaults = YamlConfiguration.loadConfiguration(inputReader);
             xBndDatabase.setDefaults(defaults);
-        } catch (UnsupportedEncodingException e1) { getLogger().severe("Failed to load Battleground Database File."); }
+            if(!configdatabaseFile.exists())
+                xBndDatabase.save(configdatabaseFile);
+        } catch (UnsupportedEncodingException e1) {
+            getLogger().severe("Failed to load Battleground Database File.");
+        } catch (IOException e2) {
+            getLogger().severe("Could not save Battleground Database File.");
+        }
     }
 
     //Disable
