@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
+import static nathan.apes.mobwars.main.MobWars.bw;
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
 
 //The Squad Object: Handles all Squads in all Battles
@@ -43,7 +44,8 @@ public class Squad {
     private static ArrayList<ArrayList<Boolean>> retreat = new ArrayList<>();
 
     //Init Squad
-    public Squad(Player owner, ArrayList<Player> localSquadPlayers, Location spawnloc, int battleIndex, int armySquadIndex, int squadIndex){
+    public Squad(Player owner, ArrayList<Player> localSquadPlayers, Location spawnloc,
+    int battleIndex, int armySquadIndex, int squadIndex){
 
         //Set variables
         if(squadIndex == 0){
@@ -79,7 +81,19 @@ public class Squad {
         spawnSquad(squadPlayers.get(battleIndex).get(squadIndex), spawnloc, squadIndex);
 
         //Give the Squad Players a tip
-        squadPlayers.get(battleIndex).get(squadIndex).forEach(player -> player.sendMessage(loggingPrefix + ChatColor.AQUA + "You are in Squad " + ChatColor.GOLD + "#" + ((squadIndex - armyIndex.get(battleIndex).get(squadIndex)) + (1 - armyIndex.get(battleIndex).get(squadIndex)))  + ChatColor.AQUA + " under commanding army " + ChatColor.GOLD + (armySquadIndex + 1) + ChatColor.AQUA + " led by " + ChatColor.GOLD + owner.getPlayerListName() + ChatColor.RESET + "." + ChatColor.AQUA + " May luck be on your side..."));
+        squadPlayers.get(battleIndex).get(squadIndex).forEach(
+            player -> {
+                player.sendMessage(loggingPrefix + ChatColor.AQUA + "You are in Squad " + ChatColor.GOLD + "#"
+                    + ((squadIndex - armyIndex.get(battleIndex).get(squadIndex)) + (1 - armyIndex.get(battleIndex).get(squadIndex)))
+                    + ChatColor.AQUA + " under commanding army " + ChatColor.GOLD + (armySquadIndex + 1) + ChatColor.AQUA + " led by "
+                    + ChatColor.GOLD + owner.getPlayerListName() + "."
+                );
+                player.sendMessage(loggingPrefix + ChatColor.GOLD + "Follow your " + ChatColor.BLUE + "Commander's "
+                    + ChatColor.GOLD + "orders and insure the enemy is slain."
+                );
+                player.sendMessage(loggingPrefix + ChatColor.AQUA + "May luck be on your side...");
+            }
+        );
     }
 
     //Teleport the players to their Squad, spawning the Squad
@@ -87,12 +101,11 @@ public class Squad {
 
         //Location variables
         Location newLoc;
-        World bw = Bukkit.getWorld("mw_BattleWorld");
-        //Change to config later...
 
         //Equipment
         ItemStack[] squadEquipment = new ItemStack[]{ new ItemStack(Material.IRON_SWORD) };
 
+        //Cycle through Squad Players to Teleport
         for(int i = 0; i < players.size(); i++) {
 
             //Teleport the players to their ranks
@@ -127,10 +140,14 @@ public class Squad {
                         currLocation = getSquadPlayers(battleIndex, squadIndex).get(i).getLocation();
                         if ((targetDestination.get(battleIndex).get(squadIndex).getX() - squadLocation.get(battleIndex).get(squadIndex).getX()) > 0){
                             newLocation = currLocation.add(1, 0, 0);
+                            if(Squad.getRetreatStatus(battleIndex, squadIndex))
+                                newLocation = currLocation.add(2, 0, 0);
                             newLocation.setYaw(270);
                         }
                         else {
                             newLocation = currLocation.subtract(1, 0, 0);
+                            if(Squad.getRetreatStatus(battleIndex, squadIndex))
+                                newLocation = currLocation.subtract(2, 0, 0);
                             newLocation.setYaw(90);
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
@@ -143,10 +160,14 @@ public class Squad {
                         currLocation = getSquadPlayers(battleIndex, squadIndex).get(i).getLocation();
                         if((targetDestination.get(battleIndex).get(squadIndex).getZ() - squadLocation.get(battleIndex).get(squadIndex).getZ()) > 0) {
                             newLocation = currLocation.add(0, 0, 1);
+                            if(Squad.getRetreatStatus(battleIndex, squadIndex))
+                                newLocation = currLocation.add(0, 0, 2);
                             newLocation.setYaw(0);
                         }
                         else {
                             newLocation = currLocation.subtract(0, 0, 1);
+                            if(Squad.getRetreatStatus(battleIndex, squadIndex))
+                                newLocation = currLocation.subtract(0, 0, 2);
                             newLocation.setYaw(180);
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
@@ -155,7 +176,8 @@ public class Squad {
                     zCurrStep.get(battleIndex).set(squadIndex, zCurrStep.get(battleIndex).get(squadIndex) + 1);
                 }
                 squadLocation.get(battleIndex).set(squadIndex, squadPlayers.get(battleIndex).get(squadIndex).get(0).getLocation());
-                if (xCurrStep.get(battleIndex).get(squadIndex).equals(xSteps.get(battleIndex).get(squadIndex)) && zCurrStep.get(battleIndex).get(squadIndex).equals(zSteps.get(battleIndex).get(squadIndex))) {
+                if (xCurrStep.get(battleIndex).get(squadIndex).equals(xSteps.get(battleIndex).get(squadIndex))
+                    && zCurrStep.get(battleIndex).get(squadIndex).equals(zSteps.get(battleIndex).get(squadIndex))) {
                     setDestination(null, battleIndex, squadIndex);
                     xCurrStep.get(battleIndex).set(squadIndex, 0.0);
                     zCurrStep.get(battleIndex).set(squadIndex, 0.0);
@@ -170,8 +192,12 @@ public class Squad {
     public static void marchTo(Location destination, int battleIndex, int squadIndex){
         setInForm(true, battleIndex, squadIndex);
         targetDestination.get(battleIndex).set(squadIndex, destination);
-        xSteps.get(battleIndex).set(squadIndex, Math.abs(targetDestination.get(battleIndex).get(squadIndex).getX() - squadLocation.get(battleIndex).get(squadIndex).getX()));
-        zSteps.get(battleIndex).set(squadIndex, Math.abs(targetDestination.get(battleIndex).get(squadIndex).getZ() - squadLocation.get(battleIndex).get(squadIndex).getZ()));
+        xSteps.get(battleIndex).set(squadIndex,
+            Math.abs(targetDestination.get(battleIndex).get(squadIndex).getX() - squadLocation.get(battleIndex).get(squadIndex).getX())
+        );
+        zSteps.get(battleIndex).set(squadIndex,
+            Math.abs(targetDestination.get(battleIndex).get(squadIndex).getZ() - squadLocation.get(battleIndex).get(squadIndex).getZ())
+        );
         xCurrStep.get(battleIndex).set(squadIndex, 0.0);
         zCurrStep.get(battleIndex).set(squadIndex, 0.0);
     }

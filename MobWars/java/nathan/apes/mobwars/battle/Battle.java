@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import static nathan.apes.mobwars.main.MobWars.bw;
 import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
 import static nathan.apes.mobwars.main.MobWars.scheduler;
 
@@ -109,10 +110,11 @@ public class Battle{
 
         //Assign Commander Variables
         //Assign Spawn Location
-        World bw = Bukkit.getWorld("mw_BattleWorld");
         Location[] commanderLocations = new Location[]{
-            new Location(bw, telearea.getX() + 5, bw.getHighestBlockYAt((int) telearea.getX() + 5, (int) telearea.getZ() - 50), telearea.getZ() - 50),
-            new Location(bw, telearea.getX() + 95, bw.getHighestBlockYAt((int) telearea.getX() + 95, (int) telearea.getZ() - 50), telearea.getZ() - 50)
+            new Location(bw, telearea.getX() + 5, bw.getHighestBlockYAt((int) telearea.getX() + 5,
+                (int) telearea.getZ() - 50), telearea.getZ() - 50),
+            new Location(bw, telearea.getX() + 95, bw.getHighestBlockYAt((int) telearea.getX() + 95,
+                (int) telearea.getZ() - 50), telearea.getZ() - 50)
         };
         commanderLocations[0].setYaw(270);
         commanderLocations[1].setYaw(90);
@@ -124,8 +126,18 @@ public class Battle{
         //Tell commanders a tip
         scheduler.scheduleSyncDelayedTask(mainClass,
             () -> {
-                opposingCommanders.get(index)[0].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 1! Fly around and command your MobSquadrons to Victory!");
-                opposingCommanders.get(index)[1].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 2! Fly around and command your MobSquadrons to Victory!");
+                opposingCommanders.get(index)[0].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 1!");
+                opposingCommanders.get(index)[0].sendMessage(loggingPrefix + ChatColor.GOLD + "Your job is to tactically " +
+                    "control your " + ChatColor.BLUE + "Mob Squadrons" + ChatColor.GOLD + " to fight the other army!"
+                );
+                opposingCommanders.get(index)[0].sendMessage(loggingPrefix + ChatColor.AQUA + "Use whatever means necessary to defeat the enemy!");
+                opposingCommanders.get(index)[0].sendMessage(loggingPrefix + ChatColor.GOLD + "Good luck!");
+                opposingCommanders.get(index)[1].sendMessage(loggingPrefix + ChatColor.AQUA + "You are Commander of Army 2!");
+                opposingCommanders.get(index)[1].sendMessage(loggingPrefix + ChatColor.GOLD + "Your job is to tactically " +
+                        "control your " + ChatColor.BLUE + "Mob Squadrons" + ChatColor.GOLD + " to fight the other army!"
+                );
+                opposingCommanders.get(index)[1].sendMessage(loggingPrefix + ChatColor.AQUA + "Use whatever means necessary to defeat the enemy!");
+                opposingCommanders.get(index)[1].sendMessage(loggingPrefix + ChatColor.GOLD + "Good luck!");
             }
         , 20L);
 
