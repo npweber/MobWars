@@ -2,12 +2,11 @@ package nathan.apes.mobwars.world.battle;
 
 import java.util.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.Vector;
 
+import static nathan.apes.mobwars.main.MobWars.bw;
 import static nathan.apes.mobwars.main.MobWars.xBndDatabase;
 
 //FindBattleground: Utility that finds an open Battleground for each Match
@@ -19,9 +18,6 @@ public class FindBattleground{
     private int xBnd;
     private int zBnd;
     private double y;
-
-    //World variable
-    private World bw;
 
     //Scanner var through config areas
     private ArrayList<Integer> areas;
@@ -36,7 +32,7 @@ public class FindBattleground{
             //Choose a random area
             xBnd = new Random().nextInt(20000000);
             zBnd = xBnd + 100;
-            y = Bukkit.getWorld("mw_BattleWorld").getHighestBlockAt(xBnd, zBnd).getY();
+            y = bw.getHighestBlockAt(xBnd, zBnd).getY();
             battlebnds = new Vector((double) xBnd, y, (double) zBnd);
 
             //Check if the area has been a previous battleground
@@ -53,13 +49,11 @@ public class FindBattleground{
             }
 
             //Choose another area if it is not a suitable battleground
-            //Expand to not choose ANY non-suitable battlegrounds
-            bw = Bukkit.getWorld("mw_BattleWorld");
             Location searchLocation = battlebnds.toLocation(bw);
-            int[] checkpointMarkerX = {0, 50, 100, 0, 50, 100, 0, 50, 100};
-            int[] checkpointMarkerZ = {0, 0, 0, 50, 50, 50, 100, 100, 100};
+            int[] checkpointMarkerX = {0, 25, 50, 100, 0, 25, 50, 100, 0, 25, 50, 100, 0, 25, 50, 100};
+            int[] checkpointMarkerZ = {0, 0, 0, 0, 25, 25, 25, 25, 50, 50, 50, 50, 100, 100, 100, 100};
             int successcheckpointCounter = 0;
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 16; i++) {
                 searchLocation = searchLocation.add(checkpointMarkerX[i], 0, checkpointMarkerZ[i]);
                 if (searchLocation.getBlock().getBiome().equals(Biome.DESERT)
                         || searchLocation.getBlock().getBiome().equals(Biome.DESERT_HILLS)
@@ -87,7 +81,7 @@ public class FindBattleground{
                     successcheckpointCounter++;
                 }
             }
-            if(successcheckpointCounter == 9)
+            if(successcheckpointCounter == 16)
                 isSuitable = true;
             else isSuitable = false;
         } while (!isSuitable);
