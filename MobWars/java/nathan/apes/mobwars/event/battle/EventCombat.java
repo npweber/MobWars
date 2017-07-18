@@ -110,7 +110,19 @@ public class EventCombat implements Listener{
                                         otherPlayer.sendMessage(ChatColor.BLUE + "You inflicted damage onto the enemy squad! [" + Squad.getHealth(BattleManager.getBattleIndex(battle),
                                             Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad)) + "HP]"
                                         );
-                                        Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), Squad.getSquadPlayer(otherPlayer)));
+                                        Squad.getOwner(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), Squad.getSquadPlayer(otherPlayer))).sendMessage(
+                                            ChatColor.BLUE + "You inflicted damage onto the enemy squad! [" + Squad.getHealth(BattleManager.getBattleIndex(battle),
+                                            Battle.getSquadIndex(BattleManager.getBattleIndex(Squad.getSquadBattle(squad)), squad))
+                                            + "HP]"
+                                        );
+                                        if(Squad.getArmyIndex(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), otherSquad)) == 0) {
+                                            Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[0] + 1.0, BattleManager.getBattleIndex(battle), 0);
+                                            otherPlayer.sendMessage(ChatColor.AQUA + "You earned 1.0 health. [" + Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[0] + "HP]");
+                                        }
+                                        if(Squad.getArmyIndex(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), otherSquad)) == 1) {
+                                            Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[1] + 1.0, BattleManager.getBattleIndex(battle), 1);
+                                            otherPlayer.sendMessage(ChatColor.AQUA + "You earned 1.0 health. [" + Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[1] + "HP]");
+                                        }
                                         otherPlayer.playSound(otherPlayer.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 1.0f, 1.0f);
                                 }
                                 damageEvent.setCancelled(true);

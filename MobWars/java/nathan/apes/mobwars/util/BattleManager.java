@@ -11,6 +11,7 @@ import java.util.*;
 
 import nathan.apes.mobwars.world.battle.FindBattleground;
 import org.bukkit.*;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -204,6 +205,8 @@ public class BattleManager {
                     Squad.getAllSquadLocation().remove(BattleManager.getBattleIndex(battle));
                     Squad.getAllRetreat().remove(BattleManager.getBattleIndex(battle));
                     Squad.getAllSquadPlayer().remove(BattleManager.getBattleIndex(battle));
+                    Squad.getAllHealthIdentifiers().get(BattleManager.getBattleIndex(battle)).forEach(enity -> enity.remove());
+                    Squad.getAllHealthIdentifiers().remove(BattleManager.getBattleIndex(battle));
                     EventCommanderAction.commander1Squad.remove(BattleManager.getBattleIndex(battle));
                     EventCommanderAction.commander2Squad.remove(BattleManager.getBattleIndex(battle));
                     BattleManager.getBattles().remove(battle);
@@ -211,6 +214,32 @@ public class BattleManager {
                 }
             }
         ), 0L, 40L);
+
+        //Update Health Identifiers
+        scheduler.scheduleSyncRepeatingTask(mainClass,
+            () -> getBattles().forEach(battle -> Battle.getSquads(BattleManager.getBattleIndex(battle)).forEach(
+                squad -> {
+                    ArmorStand healthTag = Squad.getHealthIdentifier(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad));
+                    StringBuilder tagString = new StringBuilder(healthTag.getCustomName());
+                    tagString.replace(15, tagString.length(),
+                        " " + Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), squad)) + "HP"
+                    );
+                    healthTag.setCustomName(tagString.toString());
+                }
+            ))
+        , 20L, 40L);
+
+        //Send Health Bank Status
+        scheduler.scheduleSyncRepeatingTask(mainClass, () -> getBattles().forEach(
+            battle -> {
+                for(int i = 0; i < 2; i++){
+                    Battle.getCommanders(BattleManager.getBattleIndex(battle))[i]
+                        .sendMessage(ChatColor.BLUE + "Your Health Bank is at ["
+                            + Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[i] + "HP]"
+                        );
+                }
+            })
+        , 20L, 900L);
 
         //Init Core Game Functions
         mainClass.getServer().getPluginManager().registerEvents(new EventPlayerMoveOut(), mainClass);

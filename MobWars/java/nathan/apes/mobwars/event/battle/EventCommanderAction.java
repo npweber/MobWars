@@ -156,6 +156,61 @@ public class EventCommanderAction implements Listener {
                                 commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                     }
                 }
+                //Regen the Squad by an increment, subtract health from bank
+                if(pie.getPlayer().getInventory().getHeldItemSlot() == 3){
+                    if(pie.getAction().equals(Action.RIGHT_CLICK_AIR) || pie.getAction().equals(Action.LEFT_CLICK_AIR)){
+                        if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0]) {
+                            if (!(commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
+                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                        commander1Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                            commander1Squad.get(BattleManager.getBattleIndex(battle)))) < 60.0) {
+                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                commander1Squad.get(BattleManager.getBattleIndex(battle)))) + 5.0,
+                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                        commander1Squad.get(BattleManager.getBattleIndex(battle)))
+                                        );
+                                        Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[0] - 5.0, BattleManager.getBattleIndex(battle), 0);
+                                        commander.sendMessage(loggingPrefix + ChatColor.AQUA + "You healed Squad " + ChatColor.GOLD
+                                                + Battle.getSquadIndex(BattleManager.getBattleIndex(battle), commander1Squad.get(BattleManager.getBattleIndex(battle)))
+                                                + ChatColor.AQUA + "."
+                                        );
+                                    } else
+                                        commander.sendMessage(loggingPrefix + ChatColor.RED + "This Squad has full morale. You can't heal it...");
+                                } else {
+                                    commander.sendMessage(loggingPrefix + ChatColor.RED + "This Squad is DEAD. You cannot use it.");
+                                    pie.setCancelled(true);
+                                }
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        }
+                        if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1]) {
+                            if (!(commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
+                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                        commander2Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                            commander2Squad.get(BattleManager.getBattleIndex(battle)))) < 60.0) {
+                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                commander2Squad.get(BattleManager.getBattleIndex(battle)))) + 5.0,
+                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                        commander2Squad.get(BattleManager.getBattleIndex(battle)))
+                                        );
+                                        Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[1] - 5.0, BattleManager.getBattleIndex(battle), 1);
+                                        commander.sendMessage(loggingPrefix + ChatColor.AQUA + "You healed Squad " + ChatColor.GOLD
+                                                + ((Battle.getSquadIndex(BattleManager.getBattleIndex(battle), commander2Squad.get(BattleManager.getBattleIndex(battle))) - 2) + 1)
+                                                + ChatColor.AQUA + "."
+                                        );
+                                    } else
+                                        commander.sendMessage(loggingPrefix + ChatColor.RED + "This Squad has full morale. You can't heal it...");
+                                } else {
+                                    commander.sendMessage(loggingPrefix + ChatColor.RED + "This Squad is DEAD. You cannot use it.");
+                                    pie.setCancelled(true);
+                                }
+                            } else
+                                commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
+                        }
+                    }
+                }
             }
         }
     }

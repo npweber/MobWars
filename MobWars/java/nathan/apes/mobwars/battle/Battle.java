@@ -25,6 +25,7 @@ public class Battle{
 
     //Commanders of the armies
     private static ArrayList<Player[]> opposingCommanders = new ArrayList<>();
+    private static ArrayList<double[]> armysHealthBank = new ArrayList<>();
 
     //Squads in Battle
     private static ArrayList<ArrayList<Squad>> squads = new ArrayList<>();
@@ -41,6 +42,7 @@ public class Battle{
         //Set variables
         battlePlayers.add(new ArrayList<>());
         opposingCommanders.add(new Player[2]);
+        armysHealthBank.add(new double[] {20.0, 20.0});
         squads.add(new ArrayList<>());
         battlePlayers.get(index).addAll(players);
         players.clear();
@@ -101,8 +103,14 @@ public class Battle{
         itemMeta4.setDisplayName("Commander's Retreat Option");
         commandersRetreat.setItemMeta(itemMeta4);
 
+        //Commanders Retreat Option (Item that gives specific orders to retreat to the given cordinates)
+        ItemStack commandersRegen = new ItemStack(Material.REDSTONE);
+        ItemMeta itemMeta5 = commandersRegen.getItemMeta();
+        itemMeta5.setDisplayName("Commander's Regen Option");
+        commandersRegen.setItemMeta(itemMeta5);
+
         //Give devices
-        ItemStack[] commandingItems = new ItemStack[]{ commandersBaton, commandersPickStick, commandersRetreat };
+        ItemStack[] commandingItems = new ItemStack[]{ commandersBaton, commandersPickStick, commandersRetreat, commandersRegen };
         opposingCommanders.get(index)[0].getInventory().setContents(commandingItems);
         opposingCommanders.get(index)[0].getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
         opposingCommanders.get(index)[1].getInventory().setContents(commandingItems);
@@ -218,6 +226,12 @@ public class Battle{
     //Get certain battle's commanders
     public static Player[] getCommanders(int index){ return opposingCommanders.get(index); }
     public static ArrayList<Player[]> getAllCommanders(){ return opposingCommanders; }
+
+    //Get Commander's Health Banked
+    public static double[] getArmyHealthBank(int battleIndex){ return armysHealthBank.get(battleIndex); }
+    public static void setArmyHealthBank(double healthBanked, int battleIndex, int armyIndex){
+        armysHealthBank.get(battleIndex)[armyIndex] = healthBanked;
+    }
 
     //Get certain battle's squads
     public static ArrayList<Squad> getSquads(int index){ return squads.get(index); }

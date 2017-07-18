@@ -39,6 +39,7 @@ public class Squad {
 
     //Health control
     private static ArrayList<ArrayList<Double>> health = new ArrayList<>();
+    private static ArrayList<ArrayList<ArmorStand>> healthIdentifiers = new ArrayList<>();
 
     //Retreat control
     private static ArrayList<ArrayList<Boolean>> retreat = new ArrayList<>();
@@ -61,6 +62,7 @@ public class Squad {
             isInForm.add(new ArrayList<>());
             retreat.add(new ArrayList<>());
             health.add(new ArrayList<>());
+            healthIdentifiers.add(new ArrayList<>());
             disabled.add(new ArrayList<>());
         }
         squadPlayers.get(battleIndex).add(localSquadPlayers);
@@ -75,10 +77,11 @@ public class Squad {
         isInForm.get(battleIndex).add(true);
         retreat.get(battleIndex).add(false);
         health.get(battleIndex).add(60.0);
+        healthIdentifiers.get(battleIndex).add(null);
         disabled.get(battleIndex).add(false);
 
         //Spawn it in
-        spawnSquad(squadPlayers.get(battleIndex).get(squadIndex), spawnloc, squadIndex);
+        spawnSquad(squadPlayers.get(battleIndex).get(squadIndex), spawnloc, battleIndex, armySquadIndex, squadIndex);
 
         //Give the Squad Players a tip
         squadPlayers.get(battleIndex).get(squadIndex).forEach(
@@ -97,7 +100,7 @@ public class Squad {
     }
 
     //Teleport the players to their Squad, spawning the Squad
-    private void spawnSquad(ArrayList<Player> players, Location loc, int index){
+    private void spawnSquad(ArrayList<Player> players, Location loc, int battleIndex, int armyIndex, int index){
 
         //Location variables
         Location newLoc;
@@ -119,13 +122,25 @@ public class Squad {
             newLoc.setWorld(bw);
             players.get(i).teleport(newLoc);
 
-            //Set their equipment
+            //Set their equipment & Properties
             players.get(i).getInventory().setContents(squadEquipment);
             players.get(i).getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
             players.get(i).getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
             players.get(i).getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
             players.get(i).getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
         }
+        //Give it a Health Tag
+        ArmorStand healthTag = (ArmorStand) bw.spawnEntity(loc, EntityType.ARMOR_STAND);
+        int indexMod = 0;
+        if(armyIndex == 1)
+            indexMod = 2;
+        healthTag.setCustomName("Squad " + ((index - indexMod) + 1) + "(Army " + (armyIndex + 1) + ") " + Squad.getHealth(battleIndex, index) + "HP");
+        healthTag.setCustomNameVisible(true);
+        healthTag.setVisible(false);
+        healthTag.setBasePlate(false);
+        healthTag.setGravity(false);
+        healthTag.setInvulnerable(true);
+        healthIdentifiers.get(battleIndex).set(index, healthTag);
     }
 
     //Movement Functions
@@ -152,6 +167,7 @@ public class Squad {
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
                         getSquadPlayers(battleIndex, squadIndex).get(i).teleport(newLocation);
+                        getHealthIdentifier(battleIndex, squadIndex).teleport(newLocation);
                     }
                     xCurrStep.get(battleIndex).set(squadIndex, xCurrStep.get(battleIndex).get(squadIndex) + 1);
                 }
@@ -172,6 +188,7 @@ public class Squad {
                         }
                         newLocation.setY(currLocation.getWorld().getHighestBlockYAt((int) newLocation.getX(), (int) newLocation.getZ()));
                         getSquadPlayers(battleIndex, squadIndex).get(i).teleport(newLocation);
+                        getHealthIdentifier(battleIndex, squadIndex).teleport(newLocation);
                     }
                     zCurrStep.get(battleIndex).set(squadIndex, zCurrStep.get(battleIndex).get(squadIndex) + 1);
                 }
@@ -258,6 +275,12 @@ public class Squad {
     public static void setHealth(double setAmount, int battleIndex, int squadIndex){
         health.get(battleIndex).set(squadIndex, setAmount);
     }
+
+    //Get Health Identifier
+    public static ArmorStand getHealthIdentifier(int battleIndex, int squadIndex){
+        return healthIdentifiers.get(battleIndex).get(squadIndex);
+    }
+    public static ArrayList<ArrayList<ArmorStand>> getAllHealthIdentifiers(){ return healthIdentifiers; }
 
     //Get & Set Target Destination
     public static Location getDestination(int battleIndex, int squadIndex){
