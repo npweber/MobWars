@@ -1,10 +1,6 @@
 # MobWars
-MobWars is a strategy inspired game I've needed to make for almost 5 years now. If you're reading this because the game is awesome and you wanted to see its source, then you have my uttermost thanks. 
+Unlike most combat minigames in Minecraft, where pvp is always team based from a 1st-person perspective, in MobWars, two commanders control Squads (or Mobs) of players that wage war between each other. It brings strategy into a pvp-based minigame, where there's more to the game than combat readiness.
 
-Anyway, this game is about War. It evolved from the idea of primative mobs being commanded into battle by players to destroy each other, to the idea of players fighting for a commander who leads them into battle.
+MobWars takes players to a suitable random location in a server-generated world in a restricted bound of 200x200 - the battlefield. Squads are setup with iron gear and are moved by their respective commanders. Commanders can move their Squads into battle by putting them in close proximity of the enemy Squad(s). Once engaged, Squad members can freely initiate pvp against the enemy playersm without being confined to formation. Commanders can also retreat and heal their Squads, given that each Squad has an HP (health), and the commander has his/her own HP bank to replenish from. The war is waged until all opposing Squads have fallen.
 
-This is what MobWars is: Literally. The war between mobs.
-
-Thank you for visiting the page and if you're here to inspect my work, then go ahead.
-
-This is MobWars.
+Inspired off of strategy games I've seen and played, MobWars is a true war in Minecraft pvp.
