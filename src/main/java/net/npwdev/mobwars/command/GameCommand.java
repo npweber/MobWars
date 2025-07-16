@@ -1,4 +1,4 @@
-package nathan.apes.mobwars.command;
+package net.npwdev.mobwars.command;
 
 //GameCommand: Creates a game environment for Beta purposes
 
@@ -8,8 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
-import static nathan.apes.mobwars.util.BattleManager.battlePlayers;
+import static net.npwdev.mobwars.main.MobWars.loggingPrefix;
+import static net.npwdev.mobwars.util.BattleManager.battlePlayers;
 
 public class GameCommand implements CommandExecutor{
 

@@ -1,8 +1,8 @@
-package nathan.apes.mobwars.event.battle;
+package net.npwdev.mobwars.event.battle;
 
-import nathan.apes.mobwars.battle.Battle;
-import nathan.apes.mobwars.battle.Squad;
-import nathan.apes.mobwars.util.BattleManager;
+import net.npwdev.mobwars.battle.Battle;
+import net.npwdev.mobwars.battle.Squad;
+import net.npwdev.mobwars.util.BattleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import static nathan.apes.mobwars.main.MobWars.bw;
+import static net.npwdev.mobwars.main.MobWars.bw;
 
 //EventCombat: Allows Opposing Squads to engage in Combat & Register their inflicted Casualties
 

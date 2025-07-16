@@ -1,12 +1,12 @@
-package nathan.apes.mobwars.main;
+package net.npwdev.mobwars.main;
 
-import nathan.apes.mobwars.battle.Battle;
-import nathan.apes.mobwars.battle.Squad;
-import nathan.apes.mobwars.command.GameCommand;
-import nathan.apes.mobwars.command.GameStopCommand;
-import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
-import nathan.apes.mobwars.world.battle.InitBattleWorld;
-import nathan.apes.mobwars.util.*;
+import net.npwdev.mobwars.battle.Battle;
+import net.npwdev.mobwars.battle.Squad;
+import net.npwdev.mobwars.command.GameCommand;
+import net.npwdev.mobwars.command.GameStopCommand;
+import net.npwdev.mobwars.world.lobby.InitLobbyWorld;
+import net.npwdev.mobwars.world.battle.InitBattleWorld;
+import net.npwdev.mobwars.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

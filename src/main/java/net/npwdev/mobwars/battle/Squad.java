@@ -1,14 +1,14 @@
-package nathan.apes.mobwars.battle;
+package net.npwdev.mobwars.battle;
 
 import java.util.*;
 
-import nathan.apes.mobwars.util.BattleManager;
+import net.npwdev.mobwars.util.BattleManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
-import static nathan.apes.mobwars.main.MobWars.bw;
-import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
+import static net.npwdev.mobwars.main.MobWars.bw;
+import static net.npwdev.mobwars.main.MobWars.loggingPrefix;
 
 //The Squad Object: Handles all Squads in all Battles
 

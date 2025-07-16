@@ -1,7 +1,7 @@
-package nathan.apes.mobwars.battle;
+package net.npwdev.mobwars.battle;
 
-import nathan.apes.mobwars.main.MobWars;
-import nathan.apes.mobwars.util.*;
+import net.npwdev.mobwars.main.MobWars;
+import net.npwdev.mobwars.util.*;
 
 import java.util.*;
 
@@ -12,9 +12,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import static nathan.apes.mobwars.main.MobWars.bw;
-import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
-import static nathan.apes.mobwars.main.MobWars.scheduler;
+import static net.npwdev.mobwars.main.MobWars.bw;
+import static net.npwdev.mobwars.main.MobWars.loggingPrefix;
+import static net.npwdev.mobwars.main.MobWars.scheduler;
 
 //The Battle Object: Operates all battles in the system
 

@@ -1,8 +1,8 @@
-package nathan.apes.mobwars.event.battle;
+package net.npwdev.mobwars.event.battle;
 
-import nathan.apes.mobwars.battle.Battle;
-import nathan.apes.mobwars.battle.Squad;
-import nathan.apes.mobwars.util.BattleManager;
+import net.npwdev.mobwars.battle.Battle;
+import net.npwdev.mobwars.battle.Squad;
+import net.npwdev.mobwars.util.BattleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,8 +17,8 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.ArrayList;
 
-import static nathan.apes.mobwars.battle.Battle.getCommanders;
-import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
+import static net.npwdev.mobwars.battle.Battle.getCommanders;
+import static net.npwdev.mobwars.main.MobWars.loggingPrefix;
 
 //CommanderAction Event: Listens for the commanders decisions and relays them for the troops to take action
 
@@ -50,8 +50,8 @@ public class EventCommanderAction implements Listener {
                         Location pointLocation = pie.getClickedBlock().getLocation();
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0])
                             if (!(commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle)
-                                    , commander1Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))
+                                    , commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))))) == null)) {
                                         Squad.marchTo(pointLocation, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))
                                             , commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                         if (Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -67,8 +67,8 @@ public class EventCommanderAction implements Listener {
                                 commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1])
                             if (!(commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                    commander2Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                    commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))) == null)) {
                                         Squad.marchTo(pointLocation, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                         if (Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -87,7 +87,7 @@ public class EventCommanderAction implements Listener {
                     if (pie.getAction().equals(Action.RIGHT_CLICK_AIR)) {
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0])
                             if (!(commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle), commander1Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)), commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))) == null)) {
                                     Squad.halt(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                         commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                     if (Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -103,8 +103,8 @@ public class EventCommanderAction implements Listener {
                                 commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1])
                             if (!(commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                    commander2Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                    commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))) == null)) {
                                         Squad.halt(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                         if (Squad.getRetreatStatus(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -126,8 +126,8 @@ public class EventCommanderAction implements Listener {
                         Location pointLocation = pie.getClickedBlock().getLocation();
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0])
                             if (!(commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                    commander1Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                    commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))) == null)) {
                                         Squad.marchTo(pointLocation, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                         Squad.setRetreatStatus(true, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -141,8 +141,8 @@ public class EventCommanderAction implements Listener {
                                 commander.sendMessage(loggingPrefix + ChatColor.RED + "Select a Squadron in order to give orders...");
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1])
                             if (!(commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                    commander2Squad.get(BattleManager.getBattleIndex(battle)))))) {
+                                if(!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                    commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))) == null)) {
                                         Squad.marchTo(pointLocation, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))));
                                         Squad.setRetreatStatus(true, BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
@@ -161,13 +161,13 @@ public class EventCommanderAction implements Listener {
                     if(pie.getAction().equals(Action.RIGHT_CLICK_AIR) || pie.getAction().equals(Action.LEFT_CLICK_AIR)){
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0]) {
                             if (!(commander1Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                        commander1Squad.get(BattleManager.getBattleIndex(battle)))))) {
-                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                        commander1Squad.get(BattleManager.getBattleIndex(battle)))) == null)) {
+                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander1Squad.get(BattleManager.getBattleIndex(battle)))) < 60.0) {
-                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                                 commander1Squad.get(BattleManager.getBattleIndex(battle)))) + 5.0,
-                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                                         commander1Squad.get(BattleManager.getBattleIndex(battle)))
                                         );
                                         Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[0] - 5.0, BattleManager.getBattleIndex(battle), 0);
@@ -186,13 +186,13 @@ public class EventCommanderAction implements Listener {
                         }
                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[1]) {
                             if (!(commander2Squad.get(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander))) == null)) {
-                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
-                                        commander2Squad.get(BattleManager.getBattleIndex(battle)))))) {
-                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                        commander2Squad.get(BattleManager.getBattleIndex(battle)))) == null)) {
+                                    if (Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                             commander2Squad.get(BattleManager.getBattleIndex(battle)))) < 60.0) {
-                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                        Squad.setHealth(Squad.getHealth(BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                                 commander2Squad.get(BattleManager.getBattleIndex(battle)))) + 5.0,
-                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(battle),
+                                                BattleManager.getBattleIndex(battle), Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
                                                         commander2Squad.get(BattleManager.getBattleIndex(battle)))
                                         );
                                         Battle.setArmyHealthBank(Battle.getArmyHealthBank(BattleManager.getBattleIndex(battle))[1] - 5.0, BattleManager.getBattleIndex(battle), 1);
@@ -232,8 +232,13 @@ public class EventCommanderAction implements Listener {
                             //If he points, find the squad he picks
                             if(Squad.isPlayerInSquad((Player) pie.getRightClicked())) {
                                 //Make sure it's a working Squad
-                                if (!(Squad.isDisabled(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
-                                    Battle.getSquadIndex(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)), Squad.getSquadPlayer((Player) pie.getRightClicked()))))){
+                                if (!Squad.isDisabled(
+                                    BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                    Battle.getSquadIndex(
+                                        BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)),
+                                        Squad.getSquadPlayer((Player) pie.getRightClicked())
+                                    )
+                                )) {
                                         if (commander == getCommanders(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)))[0]) {
                                             commander1Squad.set(BattleManager.getBattleIndex(Battle.getPlayerBattle(commander)), Squad.getSquadPlayer((Player) pie.getRightClicked()));
                                             commander.sendMessage(loggingPrefix + ChatColor.GOLD + "You selected Squad " + ChatColor.AQUA +

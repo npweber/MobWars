@@ -1,17 +1,17 @@
-package nathan.apes.mobwars.command;
+package net.npwdev.mobwars.command;
 
 //GameStopCommand: Disables all MobWars games
 
-import nathan.apes.mobwars.battle.Battle;
-import nathan.apes.mobwars.battle.Squad;
-import nathan.apes.mobwars.world.lobby.InitLobbyWorld;
+import net.npwdev.mobwars.battle.Battle;
+import net.npwdev.mobwars.battle.Squad;
+import net.npwdev.mobwars.world.lobby.InitLobbyWorld;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import static nathan.apes.mobwars.main.MobWars.disabling;
-import static nathan.apes.mobwars.main.MobWars.loggingPrefix;
+import static net.npwdev.mobwars.main.MobWars.disabling;
+import static net.npwdev.mobwars.main.MobWars.loggingPrefix;
 
 public class GameStopCommand implements CommandExecutor {
 
